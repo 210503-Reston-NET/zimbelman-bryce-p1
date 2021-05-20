@@ -57,7 +57,7 @@ namespace StoreBL
                 inventoryUpdated = false;
                 // If no inventory entries exist
                 if (!inventories.Any()) {
-                    Inventory newInventory = new Inventory(location.Id, item.Id, productQuantity[i]);
+                    Inventory newInventory = new Inventory(location.LocationID, item.ProductID, productQuantity[i]);
                     updatedInventory.Add(productQuantity[i]);
                     i++;
                     Log.Information("BL sent new inventory to DL");
@@ -66,7 +66,7 @@ namespace StoreBL
                 }
                 foreach (Inventory inventory in inventories) {
                     // If match is found update inventory
-                    if (inventory.LocationID.Equals(location.Id) && inventory.ProductID.Equals(item.Id) && !inventoryUpdated) {
+                    if (inventory.LocationID.Equals(location.LocationID) && inventory.ProductID.Equals(item.ProductID) && !inventoryUpdated) {
                         inventory.Quantity += productQuantity[i];
                         updatedInventory.Add(inventory.Quantity);
                         i++;
@@ -77,7 +77,7 @@ namespace StoreBL
                     }
                     // If inventory exists but specific item does not
                     if (!inventoryUpdated) {
-                        Inventory newInventory = new Inventory(location.Id, item.Id, productQuantity[i]);
+                        Inventory newInventory = new Inventory(location.LocationID, item.ProductID, productQuantity[i]);
                         updatedInventory.Add(productQuantity[i]);
                         i++;
                         Log.Information("BL sent new inventory to DL");
@@ -100,7 +100,7 @@ namespace StoreBL
             {
                 // If match found update inventory
                 foreach (Inventory inventory in inventories) {
-                    if (inventory.LocationID.Equals(location.Id) && inventory.ProductID.Equals(item.Id)) {
+                    if (inventory.LocationID.Equals(location.LocationID) && inventory.ProductID.Equals(item.ProductID)) {
                         // If not enough inventory exists for purchase, throw exception
                         if (inventory.Quantity-productQuantity[i] < 0) {
                             throw new Inventory.NotEnoughInventoryException("Not enough item in inventory");

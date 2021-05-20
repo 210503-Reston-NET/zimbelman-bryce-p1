@@ -116,7 +116,7 @@ namespace StoreUI
             {
                 // Search for specific location and retrieve orders
                 Location location = _locationBL.GetLocation(locationName);
-                List<Order> locationOrders = _orderBL.GetLocationOrders(location.Id);
+                List<Order> locationOrders = _orderBL.GetLocationOrders(location.LocationID);
                 List<Order> sortedOrders = new List<Order>();
                 do
                 {
@@ -163,7 +163,7 @@ namespace StoreUI
                         List<Product> products = _productBL.GetAllProducts();
                         foreach (Product product in products)
                         {
-                            if (product.Id.Equals(lineItem.ProductID)) {
+                            if (product.ProductID.Equals(lineItem.ProductID)) {
                                 Console.WriteLine($"{lineItem.Quantity} {product.ItemName}");
                             }
                         }
@@ -315,7 +315,7 @@ namespace StoreUI
                 // Retrieve and display specific inventory 
                 List<Product> products = _productBL.GetAllProducts();
                 Location location = _locationBL.GetLocation(storeName);
-                Inventory inventory = _inventoryBL.GetStoreInventory(location.Id);
+                Inventory inventory = _inventoryBL.GetStoreInventory(location.LocationID);
                 foreach (Product product in products)
                 {
                     Console.WriteLine($"{product.ItemName}: {inventory.Quantity}");

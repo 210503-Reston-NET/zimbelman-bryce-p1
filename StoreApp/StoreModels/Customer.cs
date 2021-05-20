@@ -21,15 +21,15 @@ namespace StoreModels
             
         }
 
-        public Customer(int id, string firstName, string lastName, string birthdate, string phoneNumber, string email, string mailAddress) : this(firstName, lastName, birthdate, phoneNumber, email, mailAddress) {
-            this.Id = id;
+        public Customer(int customerId, string firstName, string lastName, string birthdate, string phoneNumber, string email, string mailAddress) : this(firstName, lastName, birthdate, phoneNumber, email, mailAddress) {
+            this.CustomerID = customerId;
         }
 
         /// <summary>
         /// This represents a unique value for every customer
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int CustomerID { get; set; }
         /// <summary>
         /// This represents the first name of the customer
         /// </summary>
@@ -65,7 +65,8 @@ namespace StoreModels
         /// </summary>
         /// <value></value>
         public string MailAddress { get; set; }
-        public int CustomerID { get; set; }
+
+        public List<Order> Orders { get; set; }
 
         public override string ToString()
         {

@@ -19,8 +19,8 @@ namespace StoreModels
             
         }
 
-        public Inventory(int id,int locationId, int productId, int quantity) : this(locationId, productId, quantity) {
-            this.Id = id;
+        public Inventory(int inventoryId,int locationId, int productId, int quantity) : this(locationId, productId, quantity) {
+            this.InventoryID = inventoryId;
         }
 
         [Serializable]
@@ -32,7 +32,7 @@ namespace StoreModels
         /// This represents a unique value for every inventory
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int InventoryID { get; set; }
         /// <summary>
         /// This represents a unique value for every location
         /// </summary>
@@ -48,7 +48,6 @@ namespace StoreModels
         /// </summary>
         /// <value></value>
         public int Quantity { get; set; }
-        public int InventoryID { get; set; }
 
         public override string ToString()
         {

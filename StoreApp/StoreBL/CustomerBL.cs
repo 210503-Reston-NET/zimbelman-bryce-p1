@@ -55,7 +55,7 @@ namespace StoreBL
             } else {
                 foreach (Customer customer in customers)
                 {
-                    if (customerId.Equals(customer.Id)) {
+                    if (customerId.Equals(customer.CustomerID)) {
                         Log.Information("BL sends customer to UI");
                         return customer;
                     }

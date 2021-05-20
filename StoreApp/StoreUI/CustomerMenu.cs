@@ -115,7 +115,7 @@ namespace StoreUI
             try {
                 // Search for specific customer and retrive orders
                 Customer customer = _customerBL.SearchCustomer(firstName, lastName);
-                List<Order> orders = _orderBL.GetCustomerOrders(customer.Id);
+                List<Order> orders = _orderBL.GetCustomerOrders(customer.CustomerID);
                 List<Order> sortedOrders = new List<Order>();
                 do
                 {
@@ -162,7 +162,7 @@ namespace StoreUI
                         List<Product> products = _productBL.GetAllProducts();
                         foreach (Product product in products)
                         {
-                            if (product.Id.Equals(lineItem.ProductID)) {
+                            if (product.ProductID.Equals(lineItem.ProductID)) {
                                 Console.WriteLine($"{lineItem.Quantity} {product.ItemName}");
                             }
                         }
@@ -194,7 +194,7 @@ namespace StoreUI
                     List<Product> products = _productBL.GetAllProducts();
                     foreach (Product product in products)
                         {
-                            if (product.Id.Equals(lineItem.ProductID)) {
+                            if (product.ProductID.Equals(lineItem.ProductID)) {
                                 Console.WriteLine($"{lineItem.Quantity} {product.ItemName}");
                             }
                         }
@@ -232,7 +232,7 @@ namespace StoreUI
                 // Gets local date for order date and time
                 orderDate = DateTime.Now;
                 // Create initial new order to generate orderID, used by line items
-                Order newOrder = new Order(location.Id, customer.Id, orderID, 0, orderDate.ToString());
+                Order newOrder = new Order(location.LocationID, customer.CustomerID, orderID, 0, orderDate.ToString());
                 // Add customer information to order
                 _orderBL.AddOrder(newOrder, location, customer);
                 orderPlaced = true;
@@ -250,7 +250,7 @@ namespace StoreUI
                     deleteOrder.OrderID = orderID;
                     quantity.Add(_validate.ValidateInt($"{item.ItemName}: "));
                     // Create line item for each product
-                    LineItem lineItem = new LineItem(item.Id, quantity[i], orderID);
+                    LineItem lineItem = new LineItem(item.ProductID, quantity[i], orderID);
                     Log.Information("UI sent line item to BL");
                     _lineItemBL.AddLineItem(lineItem, item);
                     i++;

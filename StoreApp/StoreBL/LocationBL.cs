@@ -43,7 +43,7 @@ namespace StoreBL
                 throw new Exception ("No Locations Found");
             } else {
                 foreach (Location location in locations) {
-                    if (locationId.Equals(location.Id)) {
+                    if (locationId.Equals(location.LocationID)) {
                         Log.Information("BL sent location to UI");
                         return location;
                     }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace StoreModels
 {
 
@@ -16,15 +18,15 @@ namespace StoreModels
             
         }
 
-        public Product(int id, string itemName, double price, string description) : this(itemName, price, description) {
-            this.Id = id;
+        public Product(int productId, string itemName, double price, string description) : this(itemName, price, description) {
+            this.ProductID = productId;
         }
 
         /// <summary>
         /// This represents a unique value for every product
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int ProductID { get; set; }
         /// <summary>
         /// This represents the name of an item
         /// </summary>
@@ -42,7 +44,10 @@ namespace StoreModels
         /// </summary>
         /// <value></value>
         public string Description { get; set; }
-        public int ProductID { get; set; }
+
+        public List<LineItem> LineItems { get; set; }
+
+        public List<Inventory> Inventories { get; set; }
 
         public override string ToString()
         {

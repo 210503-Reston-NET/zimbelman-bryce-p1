@@ -168,12 +168,12 @@ namespace StoreDL
 
         public Order GetOrder(Order order)
         {
-            Order found = _context.Orders.FirstOrDefault(ord => ord.LocationID == order.LocationID && ord.CustomerID == order.CustomerID && ord.OrderID == order.OrderID && ord.Total == order.Total && ord.OrderDate == order.OrderDate);
+            Order found = _context.Orders.FirstOrDefault(ord => ord.LocationID == order.LocationID && ord.CustomerID == order.CustomerID && ord.Total == order.Total && ord.OrderDate == order.OrderDate);
             if (found == null) {
                 return null;
             }
             Log.Information("DL sent order to BL");
-            return new Model.Order(found.OrderID , order.LocationID, order.CustomerID, found.OrderID, found.Total, found.OrderDate);
+            return new Model.Order(found.OrderID , order.LocationID, order.CustomerID, found.Total, found.OrderDate);
         }
 
         public Order DeleteOrder(Order order) {
@@ -211,9 +211,9 @@ namespace StoreDL
         {
             _context.Inventories.Add(
                 new Inventory {
-                    InventoryID = inventory.Id,
-                    LocationID = GetLocation(location).Id,
-                    ProductID = GetProduct(product).Id,
+                    InventoryID = inventory.InventoryID,
+                    LocationID = GetLocation(location).LocationID,
+                    ProductID = GetProduct(product).ProductID,
                     Quantity = inventory.Quantity
                     }
                 );
@@ -224,7 +224,7 @@ namespace StoreDL
 
         public Inventory UpdateInventory(Model.Inventory inventory, Model.Location location, Model.Product product)
         {
-            Inventory updateInventory = _context.Inventories.Single(inven => inven.InventoryID == inventory.Id);
+            Inventory updateInventory = _context.Inventories.Single(inven => inven.InventoryID == inventory.InventoryID);
             updateInventory.Quantity = inventory.Quantity;
             _context.SaveChanges();
             Log.Information("DL persisted inventory update to DB");
@@ -241,7 +241,7 @@ namespace StoreDL
 
         public LineItem DeleteLineItem(LineItem lineItem)
         {
-            var deleteLineItem = _context.LineItems.Single(li => li.LineItemID == lineItem.Id);
+            var deleteLineItem = _context.LineItems.Single(li => li.LineItemID == lineItem.LineItemID);
             if (deleteLineItem != null) {
                 _context.LineItems.Remove(deleteLineItem);
                 _context.SaveChanges();

@@ -16,15 +16,15 @@ namespace StoreModels
             
         }
 
-        public LineItem(int id, int productId, int quantity, int orderID) : this(productId, quantity, orderID) {
-            this.Id = id;
+        public LineItem(int lineItemId, int productId, int quantity, int orderID) : this(productId, quantity, orderID) {
+            this.LineItemID = lineItemId;
         }
 
         /// <summary>
         /// This represents a unqiue vale for every line item
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int LineItemID { get; set; }
         /// <summary>
         /// This represents a unqiue value for every product
         /// </summary>
@@ -41,7 +41,7 @@ namespace StoreModels
         /// <value></value>
         public int OrderID { get; set; }
 
-        public int LineItemID { get; set; }
+
 
         public override string ToString()
         {

@@ -8,10 +8,9 @@ namespace StoreModels
     /// </summary>
     public class Order
     {
-        public Order(int locationId, int customerId, int orderID, double total, string orderDate) {
+        public Order(int locationId, int customerId, double total, string orderDate) {
             this.LocationID = locationId;
             this.CustomerID = customerId;
-            this.OrderID = orderID;
             this.Total = total;
             this.OrderDate = orderDate;
         }
@@ -20,15 +19,15 @@ namespace StoreModels
             
         }
 
-        public Order(int id, int locationId, int customerId, int orderID, double total, string orderDate) : this(locationId, customerId, orderID, total, orderDate) {
-            this.Id = id;
+        public Order(int orderId, int locationId, int customerId, double total, string orderDate) : this(locationId, customerId, total, orderDate) {
+            this.OrderID = orderId;
         }
 
         /// <summary>
         /// This represents a unqie value for every order
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int OrderID { get; set; }
         /// <summary>
         /// This represents the customer information of an order
         /// </summary>
@@ -40,12 +39,6 @@ namespace StoreModels
         /// </summary>
         /// <value></value>
         public int LocationID { get; set; }
-        
-        /// <summary>
-        /// This represents a unique value for every order
-        /// </summary>
-        /// <value></value>
-        public int OrderID { get; set; }
 
         /// <summary>
         /// This represents the total dollar amount of an order
@@ -53,5 +46,7 @@ namespace StoreModels
         /// <value></value>
         public double Total { get; set; }
         public string OrderDate { get; set; }
+
+        public List<LineItem> LineItems { get; set; }
     }
 }

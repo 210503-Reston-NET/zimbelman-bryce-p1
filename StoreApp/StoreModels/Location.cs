@@ -17,15 +17,15 @@ namespace StoreModels
             
         }
 
-        public Location(int id, string storeName, string address, string city, string state) : this(storeName, address, city, state) {
-            this.Id = id;
+        public Location(int locationId, string storeName, string address, string city, string state) : this(storeName, address, city, state) {
+            this.LocationID = locationId;
         }
 
         /// <summary>
         /// This represents a unique value for every location
         /// </summary>
         /// <value></value>
-        public int Id { get; set; }
+        public int LocationID { get; set; }
         /// <summary>
         /// This represents the street address of a store location
         /// </summary>
@@ -49,7 +49,10 @@ namespace StoreModels
         /// </summary>
         /// <value></value>
         public string StoreName { get; set; }
-        public int LocationID { get; set; }
+
+        public List<Order> Orders { get; set; }
+
+        public List<Inventory> Inventories { get; set; }
 
 
         public override string ToString()
