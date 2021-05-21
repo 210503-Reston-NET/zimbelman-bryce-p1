@@ -39,6 +39,18 @@ namespace StoreDL
         /// <returns></returns>
         List<Location> GetAllLocations();
         /// <summary>
+        /// Data Logic to retrieve specific location by id
+        /// </summary>
+        /// <param name="locationId"></param>
+        /// <returns></returns>
+        Location GetLocationById(int locationId);
+        /// <summary>
+        /// Data Logic to delete a specific location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        Location DeleteLocation(Location location);
+        /// <summary>
         /// Data Logic to add a product
         /// </summary>
         /// <param name="product"></param>
@@ -103,14 +115,13 @@ namespace StoreDL
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        /// 
+        Order GetOrder(Order order);
         /// <summary>
         /// Data Logic to delete a specific order
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
         Order DeleteOrder(Order order);
-        Order GetOrder(Order order);
         /// <summary>
         /// Data Logic to retrieve a list of all orders
         /// </summary>

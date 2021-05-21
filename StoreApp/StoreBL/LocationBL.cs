@@ -35,7 +35,7 @@ namespace StoreBL
             return _repo.GetAllLocations();
         }
 
-        public Location GetLocation(int locationId)
+        public Location GetLocationById(int locationId)
         {
             List<Location> locations = GetAllLocations();
             if (locations.Count == 0) {
@@ -67,6 +67,18 @@ namespace StoreBL
                 }
                 Log.Information("No matching locations found");
                 throw new Exception ("No matching locations found"); 
+            }
+        }
+
+        public Location DeleteLocation(Location location)
+        {
+            Location toBeDeleted = _repo.GetLocation(location);
+            if (toBeDeleted != null)
+            {
+                return _repo.DeleteLocation(toBeDeleted);
+            } else
+            {
+                throw new Exception("Location Does Not Exist");
             }
         }
     }

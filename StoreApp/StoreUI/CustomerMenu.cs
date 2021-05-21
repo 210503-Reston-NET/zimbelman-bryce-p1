@@ -155,7 +155,7 @@ namespace StoreUI
                 foreach (Order order in sortedOrders)
                 {
                     List<LineItem> lineItems = _lineItemBL.GetLineItems(order.OrderID);
-                    Location location = _locationBL.GetLocation(order.LocationID);
+                    Location location = _locationBL.GetLocationById(order.LocationID);
                     Console.WriteLine($"\nCustomer Name: {customer.FirstName} {customer.LastName} \nLocation Name: {location.StoreName} \nOrder Date: {order.OrderDate}");
                     foreach (LineItem lineItem in lineItems)
                     {
@@ -184,7 +184,7 @@ namespace StoreUI
             {
                 // Search for specific order
                 Order customerOrder = _orderBL.ViewOrder(orderId);
-                Location location = _locationBL.GetLocation(customerOrder.LocationID);
+                Location location = _locationBL.GetLocationById(customerOrder.LocationID);
                 Customer customer = _customerBL.SearchCustomer(customerOrder.CustomerID);
                 List<LineItem> lineItems = _lineItemBL.GetLineItems(orderId);
                 Console.WriteLine($"\nCustomer Name: {customer.FirstName} {customer.LastName} \nLocation Name: {location.StoreName} \nOrder Date: {customerOrder.OrderDate}");

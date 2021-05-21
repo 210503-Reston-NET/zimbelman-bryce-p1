@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using StoreDL;
+using StoreBL;
 
 namespace StoreWebUI
 {
@@ -27,6 +28,13 @@ namespace StoreWebUI
         {
             services.AddControllersWithViews();
             services.AddDbContext<MochaMomentDBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("MochaMomentDB")));
+            services.AddScoped<IRepository, RepoDB>();
+            services.AddScoped<ICustomerBL, CustomerBL>();
+            services.AddScoped<IInventoryBL, InventoryBL>();
+            services.AddScoped<ILineItemBL, LineItemBL>();
+            services.AddScoped<ILocationBL, LocationBL>();
+            services.AddScoped<IOrderBL, OrderBL>();
+            services.AddScoped<IProductBL, ProductBL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

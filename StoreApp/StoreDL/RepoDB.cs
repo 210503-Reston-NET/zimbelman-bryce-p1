@@ -250,5 +250,18 @@ namespace StoreDL
             }
             return null;
         }
+
+        public Location GetLocationById(int locationId)
+        {
+            return _context.Locations.Find(locationId);
+        }
+
+        public Location DeleteLocation(Location location)
+        {
+            Location toBeDeleted = _context.Locations.First(loca => loca.LocationID == location.LocationID);
+            _context.Locations.Remove(toBeDeleted);
+            _context.SaveChanges();
+            return location;
+        }
     }
 }

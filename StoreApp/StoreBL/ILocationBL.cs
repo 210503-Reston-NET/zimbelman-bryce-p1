@@ -21,12 +21,13 @@ namespace StoreBL
          /// </summary>
          /// <param name="locationId"></param>
          /// <returns></returns>
-         Location GetLocation(int locationId);
+         Location GetLocationById(int locationId);
          /// <summary>
          /// Business Logic to retrieve specific location
          /// </summary>
          /// <param name="locationName"></param>
          /// <returns></returns>
          Location GetLocation(string locationName);
+        Location DeleteLocation(Location location);
     }
 }
