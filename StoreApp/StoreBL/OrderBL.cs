@@ -24,7 +24,7 @@ namespace StoreBL
         }
 
         public Order UpdateOrder(Order order, Location location, Customer customer) {
-            Log.Information("BL sent order to DL");
+            Log.Information("BL sent updated order to DL");
             return _repo.UpdateOrder(order, location, customer);
         }
 

@@ -66,19 +66,28 @@ namespace StoreWebUI.Controllers
         // GET: Location/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(new LocationVM(_locationBL.GetLocationById(id)));
         }
 
         // POST: Location/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(LocationVM locationVM, int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    Location editLocation = _locationBL.GetLocationById(id);
+                    editLocation.StoreName = locationVM.StoreName;
+                    editLocation.City = locationVM.City;
+                    editLocation.State = locationVM.State;
+                    editLocation.Address = locationVM.Address;
+                    _locationBL.EditLocation(editLocation);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View();
+                
             }
             catch
             {

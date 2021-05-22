@@ -28,6 +28,18 @@ namespace StoreBL
          /// <param name="locationName"></param>
          /// <returns></returns>
          Location GetLocation(string locationName);
+        /// <summary>
+        /// Business Logic to delete specific location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         Location DeleteLocation(Location location);
+        /// <summary>
+        /// Business Logic to edit a specific location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        Location EditLocation(Location location);
+
     }
 }

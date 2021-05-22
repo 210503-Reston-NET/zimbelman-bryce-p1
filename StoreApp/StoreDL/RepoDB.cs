@@ -263,5 +263,17 @@ namespace StoreDL
             _context.SaveChanges();
             return location;
         }
+
+        public Location EditLocation(Location location)
+        {
+            Location editLocation = _context.Locations.Single(loca => loca.LocationID == location.LocationID);
+            editLocation.StoreName = location.StoreName;
+            editLocation.City = location.City;
+            editLocation.State = location.State;
+            editLocation.Address = location.Address;
+            _context.SaveChanges();
+            Log.Information("DL persisted location update to DB");
+            return location;
+        }
     }
 }

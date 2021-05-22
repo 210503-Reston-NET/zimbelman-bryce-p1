@@ -81,5 +81,11 @@ namespace StoreBL
                 throw new Exception("Location Does Not Exist");
             }
         }
+
+        public Location EditLocation(Location location)
+        {
+            Log.Information("BL sent updated location to DL");
+            return _repo.EditLocation(location);
+        }
     }
 }

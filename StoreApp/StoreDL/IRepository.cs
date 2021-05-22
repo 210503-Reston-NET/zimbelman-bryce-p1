@@ -39,6 +39,12 @@ namespace StoreDL
         /// <returns></returns>
         List<Location> GetAllLocations();
         /// <summary>
+        /// Data Logic to edit a specific location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        Location EditLocation(Location location);
+        /// <summary>
         /// Data Logic to retrieve specific location by id
         /// </summary>
         /// <param name="locationId"></param>
