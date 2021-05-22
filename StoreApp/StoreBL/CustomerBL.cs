@@ -24,6 +24,25 @@ namespace StoreBL
             return _repo.AddCustomer(customer);
         }
 
+        public Customer DeleteCustomer(Customer customer)
+        {
+            Customer toBeDeleted = _repo.GetCustomer(customer);
+            if (toBeDeleted != null)
+            {
+                Log.Information("BL sent customer to DL for deletion");
+                return _repo.DeleteCustomer(toBeDeleted);
+            } else
+            {
+                throw new Exception("Customer Does Not Exist");
+            }
+        }
+
+        public Customer EditCustomer(Customer customer)
+        {
+            Log.Information("BL sent updated customer to DL");
+            return _repo.EditCustomer(customer);
+        }
+
         public List<Customer> GetAllCustomers() {
             Log.Information("BL request to retrive all customers");
             return _repo.GetAllCustomers();

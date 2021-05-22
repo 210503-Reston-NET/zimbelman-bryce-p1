@@ -28,5 +28,17 @@ namespace StoreBL
         /// <param name="customerId"></param>
         /// <returns></returns>
         Customer SearchCustomer(int customerId);
+        /// <summary>
+        /// Business Logic to edit specific customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        Customer EditCustomer(Customer customer);
+        /// <summary>
+        /// Business Logic to delete a specific customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        Customer DeleteCustomer(Customer customer);
     }
 }

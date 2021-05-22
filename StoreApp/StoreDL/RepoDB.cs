@@ -275,5 +275,27 @@ namespace StoreDL
             Log.Information("DL persisted location update to DB");
             return location;
         }
+
+        public Customer EditCustomer(Customer customer)
+        {
+            Customer editCustomer = _context.Customers.Single(custo => custo.CustomerID == customer.CustomerID);
+            editCustomer.FirstName = customer.FirstName;
+            editCustomer.LastName = customer.LastName;
+            editCustomer.Birthdate = customer.Birthdate;
+            editCustomer.PhoneNumber = customer.PhoneNumber;
+            editCustomer.Email = customer.Email;
+            editCustomer.MailAddress = customer.MailAddress;
+            _context.SaveChanges();
+            Log.Information("DL persisted customer update to DB");
+            return customer;
+        }
+
+        public Customer DeleteCustomer(Customer customer)
+        {
+            Customer toBeDeleted = _context.Customers.First(custo => custo.CustomerID == customer.CustomerID);
+            _context.Customers.Remove(toBeDeleted);
+            _context.SaveChanges();
+            return customer;
+        }
     }
 }

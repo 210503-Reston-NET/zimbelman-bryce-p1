@@ -17,6 +17,7 @@ namespace StoreWebUI.Models
 
         public CustomerVM(Customer customer)
         {
+            CustomerID = customer.CustomerID;
             FirstName = customer.FirstName;
             LastName = customer.LastName;
             Birthdate = customer.Birthdate;

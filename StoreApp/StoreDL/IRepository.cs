@@ -22,6 +22,18 @@ namespace StoreDL
         /// <returns></returns>
         Customer GetCustomer(Customer customer);
         /// <summary>
+        /// Data Logic to edit a specific customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        Customer EditCustomer(Customer customer);
+        /// <summary>
+        /// Data Logic to delete a specific customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        Customer DeleteCustomer(Customer customer);
+        /// <summary>
         /// Data Logic to add a location
         /// </summary>
         /// <param name="location"></param>

@@ -41,13 +41,25 @@ namespace StoreWebUI.Controllers
         // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CustomerVM customerVM)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _customerBL.AddCustomer(new Customer
+                    {
+                        FirstName = customerVM.FirstName,
+                        LastName = customerVM.LastName,
+                        Birthdate = customerVM.Birthdate,
+                        PhoneNumber = customerVM.PhoneNumber,
+                        Email = customerVM.Email,
+                        MailAddress = customerVM.MailAddress
+                    }
+                        );
+                        return RedirectToAction(nameof(Index));
+                }
+                return View();
             }
             catch
             {
@@ -58,19 +70,29 @@ namespace StoreWebUI.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(new CustomerVM(_customerBL.SearchCustomer(id)));
         }
 
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(CustomerVM customerVM, int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    Customer editCustomer = _customerBL.SearchCustomer(id);
+                    editCustomer.FirstName = customerVM.FirstName;
+                    editCustomer.LastName = customerVM.LastName;
+                    editCustomer.Email = customerVM.Email;
+                    editCustomer.Birthdate = customerVM.Birthdate;
+                    editCustomer.PhoneNumber = customerVM.PhoneNumber;
+                    editCustomer.MailAddress = customerVM.MailAddress;
+                    _customerBL.EditCustomer(editCustomer);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View();
             }
             catch
             {
@@ -81,7 +103,7 @@ namespace StoreWebUI.Controllers
         // GET: Customer/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(new CustomerVM(_customerBL.SearchCustomer(id)));
         }
 
         // POST: Customer/Delete/5
@@ -91,8 +113,7 @@ namespace StoreWebUI.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
+                _customerBL.DeleteCustomer(_customerBL.SearchCustomer(id));
                 return RedirectToAction(nameof(Index));
             }
             catch

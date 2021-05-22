@@ -75,6 +75,7 @@ namespace StoreBL
             Location toBeDeleted = _repo.GetLocation(location);
             if (toBeDeleted != null)
             {
+                Log.Information("BL sent location to DL for deletion");
                 return _repo.DeleteLocation(toBeDeleted);
             } else
             {
