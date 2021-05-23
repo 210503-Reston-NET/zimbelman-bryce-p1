@@ -24,7 +24,29 @@ namespace StoreBL
          /// </summary>
          /// <param name="locationId"></param>
          /// <returns></returns>
-         Inventory GetStoreInventory(int locationId);
+         Inventory GetStoreInventoryByLocation(int locationId);
+        /// <summary>
+        /// Business Logic to retrieve specific inventory
+        /// </summary>
+        /// <param name="inventoryId"></param>
+        /// <returns></returns>
+         Inventory GetStoreInventory(int inventoryId);
+        /// <summary>
+        /// Business Logic to retrieve a list of all inventories
+        /// </summary>
+        /// <returns></returns>
          List<Inventory> GetAllInventories();
+        /// <summary>
+        /// Business Logic to add a specific store inventory
+        /// </summary>
+        /// <param name="inventory"></param>
+        /// <returns></returns>
+        Inventory AddInventory(Inventory inventory);
+        /// <summary>
+        /// Business Logic to edit a specific store inventory
+        /// </summary>
+        /// <param name="inventory"></param>
+        /// <returns></returns>
+        Inventory EditInventory(Inventory inventory);
     }
 }

@@ -109,10 +109,8 @@ namespace StoreDL
         /// Data Logic to update a store inventory
         /// </summary>
         /// <param name="inventory"></param>
-        /// <param name="location"></param>
-        /// <param name="product"></param>
         /// <returns></returns>
-        Inventory UpdateInventory(Inventory inventory, Location location, Product product);
+        Inventory UpdateInventory(Inventory inventory);
         /// <summary>
         /// Data Logic to retrieve a list of all inventories
         /// </summary>
@@ -124,6 +122,12 @@ namespace StoreDL
         /// <param name="inventory"></param>
         /// <returns></returns>
         Inventory GetStoreInventory(Inventory inventory);
+        /// <summary>
+        /// Data Logic to retrieve a specific store inventory
+        /// </summary>
+        /// <param name="inventoryId"></param>
+        /// <returns></returns>
+        Inventory GetStoreInventory(int inventoryId);
         /// <summary>
         /// Data Logic to add an order
         /// </summary>

@@ -14,9 +14,31 @@ namespace StoreBL
     {
         private IRepository _repo;
         private ILocationBL _locationBL;
-        public InventoryBL(IRepository repo, ILocationBL locationBL) {
+        private IProductBL _productBL;
+        public InventoryBL(IRepository repo, ILocationBL locationBL, IProductBL productBL) {
             _repo = repo;
             _locationBL = locationBL;
+            _productBL = productBL;
+        }
+
+        public Inventory AddInventory(Inventory inventory)
+        {
+            if (_repo.GetStoreInventory(inventory) != null)
+            {
+                Log.Information("Store inventory already exists");
+                throw new Exception("Store inventory already exists");
+            }
+            Log.Information("BL sent new store inventory to DL");
+            Location location = _locationBL.GetLocationById(inventory.LocationID);
+            Product product = _productBL.GetProductById(inventory.ProductID);
+            return _repo.AddInventory(inventory, location, product);
+        }
+
+        public Inventory EditInventory(Inventory inventory)
+        {
+            _repo.UpdateInventory(inventory);
+            Log.Information("Updated inventory sent to DL");
+            return inventory;
         }
 
         public List<Inventory> GetAllInventories()
@@ -25,7 +47,13 @@ namespace StoreBL
             return _repo.GetAllInventories();
         }
 
-        public Inventory GetStoreInventory(int locationId)
+        public Inventory GetStoreInventory(int inventoryId)
+        {
+            Log.Information("BL retrieve store inventory from DL");
+            return _repo.GetStoreInventory(inventoryId);
+        }
+
+        public Inventory GetStoreInventoryByLocation(int locationId)
         {
             List<Inventory> inventories = _repo.GetAllInventories();
                 foreach (Inventory inventory in inventories) {
@@ -71,7 +99,7 @@ namespace StoreBL
                         updatedInventory.Add(inventory.Quantity);
                         i++;
                         Log.Information("BL sent updated inventory to DL");
-                        _repo.UpdateInventory(inventory, location, item);
+                        _repo.UpdateInventory(inventory);
                         inventoryUpdated = true;
                         }
                     }
@@ -109,7 +137,7 @@ namespace StoreBL
                         updatedInventory.Add(inventory.Quantity);
                         i++;
                         Log.Information("BL sent updated inventory to DL");
-                        _repo.UpdateInventory(inventory, location, item);
+                        _repo.UpdateInventory(inventory);
                         }
                     }
                 }

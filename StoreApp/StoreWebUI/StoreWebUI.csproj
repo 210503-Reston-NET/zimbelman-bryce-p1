@@ -22,5 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Location\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 </Project>
