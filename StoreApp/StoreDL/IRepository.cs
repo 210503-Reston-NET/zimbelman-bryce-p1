@@ -86,6 +86,18 @@ namespace StoreDL
         /// <returns></returns>
         List<Product> GetAllProducts();
         /// <summary>
+        /// Data Logic to edit a specific product
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        Product EditProduct(Product product);
+        /// <summary>
+        /// Data Logic to delete a specific product
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        Product DeleteProduct(Product product);
+        /// <summary>
         /// Data Logic to add a store inventory
         /// </summary>
         /// <param name="inventory"></param>

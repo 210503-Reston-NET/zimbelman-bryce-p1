@@ -177,7 +177,7 @@ namespace StoreDL
         }
 
         public Order DeleteOrder(Order order) {
-            Order deleteOrder = _context.Orders.Single(ord => ord.OrderID == order.OrderID);
+            Order deleteOrder = _context.Orders.First(ord => ord.OrderID == order.OrderID);
             if (deleteOrder != null) {
                 _context.Orders.Remove(deleteOrder);
                 _context.SaveChanges();
@@ -224,7 +224,7 @@ namespace StoreDL
 
         public Inventory UpdateInventory(Model.Inventory inventory, Model.Location location, Model.Product product)
         {
-            Inventory updateInventory = _context.Inventories.Single(inven => inven.InventoryID == inventory.InventoryID);
+            Inventory updateInventory = _context.Inventories.First(inven => inven.InventoryID == inventory.InventoryID);
             updateInventory.Quantity = inventory.Quantity;
             _context.SaveChanges();
             Log.Information("DL persisted inventory update to DB");
@@ -232,7 +232,7 @@ namespace StoreDL
         }
 
         public Model.Order UpdateOrder(Model.Order order, Model.Location location, Model.Customer customer) {
-            Order updateOrder = _context.Orders.Single(ord => ord.OrderID == order.OrderID);
+            Order updateOrder = _context.Orders.First(ord => ord.OrderID == order.OrderID);
             updateOrder.Total = order.Total;
             _context.SaveChanges();
             Log.Information("DL persisted order update to DB");
@@ -241,7 +241,7 @@ namespace StoreDL
 
         public LineItem DeleteLineItem(LineItem lineItem)
         {
-            var deleteLineItem = _context.LineItems.Single(li => li.LineItemID == lineItem.LineItemID);
+            var deleteLineItem = _context.LineItems.First(li => li.LineItemID == lineItem.LineItemID);
             if (deleteLineItem != null) {
                 _context.LineItems.Remove(deleteLineItem);
                 _context.SaveChanges();
@@ -266,7 +266,7 @@ namespace StoreDL
 
         public Location EditLocation(Location location)
         {
-            Location editLocation = _context.Locations.Single(loca => loca.LocationID == location.LocationID);
+            Location editLocation = _context.Locations.First(loca => loca.LocationID == location.LocationID);
             editLocation.StoreName = location.StoreName;
             editLocation.City = location.City;
             editLocation.State = location.State;
@@ -278,7 +278,7 @@ namespace StoreDL
 
         public Customer EditCustomer(Customer customer)
         {
-            Customer editCustomer = _context.Customers.Single(custo => custo.CustomerID == customer.CustomerID);
+            Customer editCustomer = _context.Customers.First(custo => custo.CustomerID == customer.CustomerID);
             editCustomer.FirstName = customer.FirstName;
             editCustomer.LastName = customer.LastName;
             editCustomer.Birthdate = customer.Birthdate;
@@ -295,7 +295,28 @@ namespace StoreDL
             Customer toBeDeleted = _context.Customers.First(custo => custo.CustomerID == customer.CustomerID);
             _context.Customers.Remove(toBeDeleted);
             _context.SaveChanges();
+            Log.Information("DL deleted customer from DB");
             return customer;
+        }
+
+        public Product EditProduct(Product product)
+        {
+            Product editProduct = _context.Products.First(prod => prod.ProductID == product.ProductID);
+            editProduct.ItemName = product.ItemName;
+            editProduct.Price = product.Price;
+            editProduct.Description = product.Description;
+            _context.SaveChanges();
+            Log.Information("BL persisted prodcut update to DB");
+            return product;
+        }
+
+        public Product DeleteProduct(Product product)
+        {
+            Product toBeDeleted = _context.Products.First(prod => prod.ProductID == product.ProductID);
+            _context.Products.Remove(toBeDeleted);
+            _context.SaveChanges();
+            Log.Information("DL deleted product from DB");
+            return product;
         }
     }
 }

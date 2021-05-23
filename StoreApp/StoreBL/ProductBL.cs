@@ -25,10 +25,53 @@ namespace StoreBL
             return _repo.AddProduct(product);
         }
 
+        public Product DeleteProduct(Product product)
+        {
+            Product toBeDeleted = _repo.GetProduct(product);
+            if (toBeDeleted != null)
+            {
+                Log.Information("BL sent product to DL for deletion");
+                return _repo.DeleteProduct(toBeDeleted);
+            }
+            else
+            {
+                throw new Exception("Product Does Not Exist");
+            }
+        }
+
+        public Product EditProduct(Product product)
+        {
+            Log.Information("BL sent updated product to DL");
+            return _repo.EditProduct(product);
+        }
+
         public List<Product> GetAllProducts()
         {
             Log.Information("BL attempt to retrieve list of all products from DL");
             return _repo.GetAllProducts();
+        }
+
+        public Product GetProductById(int productId)
+        {
+            List<Product> products = GetAllProducts();
+            if (products.Count == 0)
+            {
+                Log.Information("No Products Found");
+                throw new Exception("No Products Found");
+            }
+            else
+            {
+                foreach (Product item in products)
+                {
+                    if (productId.Equals(item.ProductID))
+                    {
+                        Log.Information("BL sent Product to UI");
+                        return item;
+                    }
+                }
+                Log.Information("No matching products found");
+                throw new Exception("No matching products found");
+            }
         }
 
         public double GetTotal(List<int> quantity)
