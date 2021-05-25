@@ -1,26 +1,23 @@
-using System;
-using System.Collections.Generic;
-
-namespace StoreModels
+﻿using System;
+using StoreModels;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+namespace StoreWebUI.Models
 {
-    /// <summary>
-    /// Order Model
-    /// </summary>
-    public class Order
+    public class OrderVM
     {
-        public Order(int locationId, int customerId, double total, string orderDate) {
-            this.LocationID = locationId;
-            this.CustomerID = customerId;
-            this.Total = total;
-            this.OrderDate = orderDate;
+        public OrderVM()
+        {
+
         }
 
-        public Order() {
-            
-        }
-
-        public Order(int orderId, int locationId, int customerId, double total, string orderDate) : this(locationId, customerId, total, orderDate) {
-            this.OrderID = orderId;
+        public OrderVM(Order order)
+        {
+            OrderID = order.OrderID;
+            CustomerID = order.CustomerID;
+            LocationID = order.LocationID;
+            Total = order.Total;
+            OrderDate = order.OrderDate;
         }
 
         /// <summary>
@@ -32,12 +29,14 @@ namespace StoreModels
         /// This represents the customer information of an order
         /// </summary>
         /// <value></value>
+        [DisplayName("Customer")]
         public int CustomerID { get; set; }
 
         /// <summary>
         /// This represents the location information of an order
         /// </summary>
         /// <value></value>
+        [DisplayName("Store Name")]
         public int LocationID { get; set; }
 
         /// <summary>
@@ -48,8 +47,7 @@ namespace StoreModels
         /// <summary>
         /// This represents the date an order was placed
         /// </summary>
+        [DisplayName("Order Date")]
         public string OrderDate { get; set; }
-
-        public List<LineItem> LineItems { get; set; }
     }
 }

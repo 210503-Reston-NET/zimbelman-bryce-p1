@@ -29,7 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\StoreModels\StoreModels.csproj" />
     <ProjectReference Include="..\StoreDL\StoreDL.csproj" />
-    <ProjectReference Include="..\StoreUI\StoreUI.csproj" />
   </ItemGroup>
 
 </Project>

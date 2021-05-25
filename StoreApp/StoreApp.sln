@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreUI", "StoreUI\StoreUI.csproj", "{2A4A916D-C344-4BA2-877E-F959CA9CBFEA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreModels", "StoreModels\StoreModels.csproj", "{276B1B82-2B31-4E76-AF6F-2ECF498FC85D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreBL", "StoreBL\StoreBL.csproj", "{EF1D76DA-3CDE-4D2B-8E5F-1F645C7D689C}"

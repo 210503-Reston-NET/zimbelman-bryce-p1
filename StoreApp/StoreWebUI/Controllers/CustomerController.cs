@@ -21,10 +21,38 @@ namespace StoreWebUI.Controllers
 
 
         // GET: Customer
+        public ActionResult List(CustomerVM customerVM)
+        {
+            return View(customerVM);
+        }
+
         public ActionResult Index()
         {
-            return View(_customerBL.GetAllCustomers().Select(customer => new CustomerVM(customer)).ToList());
+            return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(CustomerVM customerVM, IFormCollection collection)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    List <CustomerVM> customerList = new List<CustomerVM>();
+                    Customer customerModel = _customerBL.SearchCustomer(customerVM.FirstName, customerVM.LastName);
+                    CustomerVM customer = new CustomerVM(customerModel);
+                    customerList.Add(customer);
+                    return RedirectToAction(nameof(List));
+                }
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+      
 
         // GET: Customer/Details/5
         public ActionResult Details(int id)
@@ -57,7 +85,7 @@ namespace StoreWebUI.Controllers
                         MailAddress = customerVM.MailAddress
                     }
                         );
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(List));
                 }
                 return View();
             }
@@ -90,7 +118,7 @@ namespace StoreWebUI.Controllers
                     editCustomer.PhoneNumber = customerVM.PhoneNumber;
                     editCustomer.MailAddress = customerVM.MailAddress;
                     _customerBL.EditCustomer(editCustomer);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(List));
                 }
                 return View();
             }
@@ -114,7 +142,7 @@ namespace StoreWebUI.Controllers
             try
             {
                 _customerBL.DeleteCustomer(_customerBL.SearchCustomer(id));
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(List));
             }
             catch
             {
