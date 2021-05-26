@@ -1,9 +1,7 @@
 @model StoreWebUI.Models.InventoryVM
-
 @{
     ViewData["Title"] = "Create";
 }
-
 <h1>Create New Inventory</h1>
 
 <h4>Inventory</h4>
@@ -14,12 +12,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="LocationID" class="control-label"></label>
-                <input asp-for="LocationID" class="form-control" />
+                @Html.DropDownListFor(loca => loca.LocationID , new SelectList(ViewData["locations"] as IList<string>), "Select Location", new { @class = "form-control"})
                 <span asp-validation-for="LocationID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductID" class="control-label"></label>
-                <input asp-for="ProductID" class="form-control" />
+                @Html.DropDownListFor(prod => prod.ProductID, new SelectList(ViewData["products"] as IList<string>), "Select Product", new { @class = "form-control" })
                 <span asp-validation-for="ProductID" class="text-danger"></span>
             </div>
             <div class="form-group">

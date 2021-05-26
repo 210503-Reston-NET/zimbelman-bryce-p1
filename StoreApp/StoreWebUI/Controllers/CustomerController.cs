@@ -23,7 +23,19 @@ namespace StoreWebUI.Controllers
         // GET: Customer
         public ActionResult List(CustomerVM customerVM)
         {
-            return View(customerVM);
+            List<CustomerVM> customerList = new List<CustomerVM>();
+            try
+            {
+                Customer customerModel = _customerBL.SearchCustomer(TempData["firstName"].ToString(), TempData["lastName"].ToString());
+                CustomerVM customer = new CustomerVM(customerModel);
+                customerList.Add(customer);
+                return View(customerList);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
         }
 
         public ActionResult Index()
@@ -33,16 +45,14 @@ namespace StoreWebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(CustomerVM customerVM, IFormCollection collection)
+        public ActionResult Index(string firstName, string lastName)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    List <CustomerVM> customerList = new List<CustomerVM>();
-                    Customer customerModel = _customerBL.SearchCustomer(customerVM.FirstName, customerVM.LastName);
-                    CustomerVM customer = new CustomerVM(customerModel);
-                    customerList.Add(customer);
+                    TempData["firstName"] = firstName;
+                    TempData["lastName"] = lastName;
                     return RedirectToAction(nameof(List));
                 }
                 return View();
@@ -85,7 +95,9 @@ namespace StoreWebUI.Controllers
                         MailAddress = customerVM.MailAddress
                     }
                         );
-                        return RedirectToAction(nameof(List));
+                    TempData["firstName"] = customerVM.FirstName;
+                    TempData["lastName"] = customerVM.LastName;
+                    return RedirectToAction(nameof(List));
                 }
                 return View();
             }
@@ -118,6 +130,8 @@ namespace StoreWebUI.Controllers
                     editCustomer.PhoneNumber = customerVM.PhoneNumber;
                     editCustomer.MailAddress = customerVM.MailAddress;
                     _customerBL.EditCustomer(editCustomer);
+                    TempData["firstName"] = customerVM.FirstName;
+                    TempData["lastName"] = customerVM.LastName;
                     return RedirectToAction(nameof(List));
                 }
                 return View();
@@ -142,7 +156,7 @@ namespace StoreWebUI.Controllers
             try
             {
                 _customerBL.DeleteCustomer(_customerBL.SearchCustomer(id));
-                return RedirectToAction(nameof(List));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {

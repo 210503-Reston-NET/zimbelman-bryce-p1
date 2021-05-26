@@ -1,15 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreBL;
 using StoreModels;
 using StoreWebUI.Models;
-using System.Dynamic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using StoreDL;
 
 namespace StoreWebUI.Controllers
 {
@@ -58,6 +53,21 @@ namespace StoreWebUI.Controllers
         // GET: Inventory/Create
         public ActionResult Create()
         {
+            List<Location> locations = _locationBL.GetAllLocations();
+            List<Product> products = _productBL.GetAllProducts();
+            List<string> storeNames = new List<string>();
+            List<string> itemNames = new List<string>();
+            foreach (Location location in locations)
+            {
+                storeNames.Add(location.StoreName);
+            }
+            ViewData.Add("locations", storeNames);
+            foreach (Product item in products)
+            {
+                itemNames.Add(item.ItemName);
+            }
+            ViewData.Add("products", itemNames);
+
             return View();
         }
 
@@ -68,6 +78,20 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                List<Location> locations = _locationBL.GetAllLocations();
+                List<Product> products = _productBL.GetAllProducts();
+                List<string> storeNames = new List<string>();
+                List<string> itemNames = new List<string>();
+                foreach (Location location in locations)
+                {
+                    storeNames.Add(location.StoreName);
+                }
+                ViewData.Add("locations", storeNames);
+                foreach (Product item in products)
+                {
+                    itemNames.Add(item.ItemName);
+                }
+                ViewData.Add("products", itemNames);
                 if (ModelState.IsValid)
                 {
                     _inventoryBL.AddInventory(new Inventory
@@ -79,11 +103,11 @@ namespace StoreWebUI.Controllers
                        );
                     return RedirectToAction(nameof(Index));
                 }
-                return View();
+                return View(inventoryVM);
             }
             catch
             {
-                return View();
+                return View(inventoryVM);
             }
         }
 
