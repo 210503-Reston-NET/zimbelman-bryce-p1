@@ -9,7 +9,7 @@ trigger:
 pool: Default
 
 variables:
-  solution: '**/zimbelman-bryce-p1/StoreApp/*.sln'
+  solution: '**/StoreApp/*.sln'
   buildPlatform: 'Any CPU'
   buildConfigurtion: 'Release'
 
@@ -30,4 +30,4 @@ steps:
   displayName: Test
   inputs:
     command: 'test'
-    projects: '**/zimbelman-bryce-p1/StoreApp/StoreTests/*.csproj'
+    projects: '**/StoreApp/StoreTests/*.csproj'
