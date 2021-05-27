@@ -8,6 +8,26 @@ trigger:
 
 pool: Default
 
+variables:
+  solution: '**/zimbelman-bryce-p1/StoreApp/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfigurtion: 'Release'
+
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# Basic pipeline of restoring, building, and testing
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: 'restore'
+    projects: $(solution)
+    feedsToUse: 'select'
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: 'build'
+    projects: $(solution)
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: 'test'
+    projects: '**/zimbelman-bryce-p1/StoreApp/StoreTests/*.csproj'
