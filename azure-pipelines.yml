@@ -31,3 +31,18 @@ steps:
   inputs:
     command: 'test'
     projects: '**/StoreApp/StoreTests/*.csproj'
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: true
+    projects: '**/StoreApp/StoreWebUI/*.csproj'
+- task: AzureRmWebAppDeployment@4
+  displayName: Deploy
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(b5a73573-c365-4df4-90d9-79329c2413a9)'
+    appType: 'webApp'
+    WebAppName: 'MochaMoment'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
