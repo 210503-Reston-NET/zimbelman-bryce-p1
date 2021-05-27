@@ -13,10 +13,14 @@ namespace StoreWebUI.Controllers
     public class LocationController : Controller
     {
         private ILocationBL _locationBL;
+        private IInventoryBL _inventoryBL;
+        private IProductBL _productBL;
 
-        public LocationController(ILocationBL locationBL)
+        public LocationController(ILocationBL locationBL, IInventoryBL inventoryBL, IProductBL productBL)
         {
             _locationBL = locationBL;
+            _inventoryBL = inventoryBL;
+            _productBL = productBL;
         }
 
         // GET: Location
@@ -53,6 +57,20 @@ namespace StoreWebUI.Controllers
                         State = locationVM.State,
                         Address = locationVM.Address
                     });
+
+                    List<Product> products = _productBL.GetAllProducts();
+                    Location location = _locationBL.GetLocation(locationVM.StoreName);
+                    foreach (Product item in products)
+                    {
+                        _inventoryBL.AddInventory(new Inventory
+                        {
+                            LocationID = location.LocationID,
+                            ProductID = item.ProductID,
+                            Quantity = 0
+                        });
+                    }
+
+                    
                     return RedirectToAction(nameof(Index));
                 }
                 return View();
@@ -115,6 +133,12 @@ namespace StoreWebUI.Controllers
             {
                 return View();
             }
+        }
+
+        // Get: View Inventory
+        public ActionResult Inventory(int id)
+        {
+            return RedirectToAction("Edit", "Inventory");
         }
     }
 }
