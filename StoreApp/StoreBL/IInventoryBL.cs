@@ -24,7 +24,7 @@ namespace StoreBL
          /// </summary>
          /// <param name="locationId"></param>
          /// <returns></returns>
-         Inventory GetStoreInventoryByLocation(int locationId);
+         List<Inventory> GetStoreInventoryByLocation(int locationId);
         /// <summary>
         /// Business Logic to retrieve specific inventory
         /// </summary>

@@ -53,15 +53,20 @@ namespace StoreBL
             return _repo.GetStoreInventory(inventoryId);
         }
 
-        public Inventory GetStoreInventoryByLocation(int locationId)
+        public List<Inventory> GetStoreInventoryByLocation(int locationId)
         {
             List<Inventory> inventories = _repo.GetAllInventories();
+            List<Inventory> storeInventory = new List<Inventory>();
                 foreach (Inventory inventory in inventories) {
                     if (locationId.Equals(inventory.LocationID)) {
-                        Log.Information("BL sent inventory to UI");
-                        return inventory;
+                    storeInventory.Add(inventory);
                     }
                 }
+            if (storeInventory.Any())
+            {
+                Log.Information("BL sent inventory to UI");
+                return storeInventory;
+            }
             if (!inventories.Any()) {
                 Log.Information("No inventories found");
                 throw new Exception("No inventories found");

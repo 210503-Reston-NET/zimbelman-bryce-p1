@@ -4,19 +4,104 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreBL;
+using StoreModels;
 
 namespace StoreWebUI.Controllers
 {
     public class OrderController : Controller
     {
+        public IOrderBL _orderBL;
+        public ICustomerBL _customerBL;
+        public ILocationBL _locationBL;
+
+        public OrderController(IOrderBL orderBL, ICustomerBL customerBL, ILocationBL locationBL)
+        {
+            _orderBL = orderBL;
+            _customerBL = customerBL;
+            _locationBL = locationBL;
+        }
+
         // GET: Order
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Order/Details/5
-        public ActionResult Details(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string firstName, string lastName)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (_customerBL.SearchCustomer(firstName, lastName) != null)
+                    {
+                        TempData["firstName"] = firstName;
+                        TempData["lastName"] = lastName;
+                        return RedirectToAction(nameof(Location));
+                    }
+                }
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // Get
+        public ActionResult Location()
+        {
+            return View();
+        }
+
+        // Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Location(string storeName)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Customer customer = _customerBL.SearchCustomer(TempData["firstName"].ToString(), TempData["lastName"].ToString());
+                    Location location = _locationBL.GetLocation(storeName);
+                    int orderID = 0;
+                    if (location == null)
+                    {
+                        return View();
+                    }
+                    Order newOrder = new Order(location.LocationID, customer.CustomerID, 0, DateTime.Now.ToString());
+                    _orderBL.AddOrder(newOrder, location, customer);
+                    List<Order> orders = _orderBL.GetAllOrders();
+                    // Retrieves latest orderID
+                    foreach (Order order in orders)
+                    {
+                        orderID = order.OrderID;
+                    }
+                    TempData["OrderID"] = orderID;
+                    return RedirectToAction(nameof(LineItems));
+                }
+                return View();
+            } catch
+            {
+                return View();
+            }
+            
+        }
+
+        // Get
+        public ActionResult LineItems()
+        {
+            return View();
+        }
+
+        // Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LineItems(List<int> quantity)
         {
             return View();
         }

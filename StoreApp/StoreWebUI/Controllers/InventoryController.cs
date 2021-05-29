@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -115,19 +116,32 @@ namespace StoreWebUI.Controllers
         public ActionResult Edit(int id)
         {
             IDToNameConverter();
-            return View(new InventoryVM(_inventoryBL.GetStoreInventory(id)));
+            try
+            {
+                List<InventoryVM> storeInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString())).Select(inven => new InventoryVM(inven)).ToList();
+
+                return View(storeInventory);
+            } catch
+            {
+                return View();
+            }
         }
 
         // POST: Inventory/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(InventoryVM inventoryVM, int id, IFormCollection collection)
+        public ActionResult Edit(List<InventoryVM> inventoryVM, int id, IFormCollection collection)
         {
+            int i = 0;
             try
             {
-                Inventory editInventory = _inventoryBL.GetStoreInventory(id);
-                editInventory.Quantity = inventoryVM.Quantity;
-                _inventoryBL.EditInventory(editInventory);
+                List<Inventory> editInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString()));
+                foreach (InventoryVM inventory in inventoryVM)
+                {
+                    editInventory[i].Quantity = inventory.Quantity;
+                    _inventoryBL.EditInventory(editInventory[i]);
+                    i++;
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch

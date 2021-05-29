@@ -138,6 +138,7 @@ namespace StoreWebUI.Controllers
         // Get: View Inventory
         public ActionResult Inventory(int id)
         {
+            TempData["locationID"] = id;
             return RedirectToAction("Edit", "Inventory");
         }
     }
