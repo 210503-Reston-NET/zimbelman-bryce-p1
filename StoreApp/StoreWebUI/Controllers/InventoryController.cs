@@ -118,8 +118,16 @@ namespace StoreWebUI.Controllers
             IDToNameConverter();
             try
             {
+                int i = 0;
+                List<Product> products = _productBL.GetAllProducts();
                 List<InventoryVM> storeInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString())).Select(inven => new InventoryVM(inven)).ToList();
-
+                foreach (Product product in products)
+                {
+                    string itemName = "itemName" + i;
+                    ViewData.Add(itemName, product.ItemName);
+                    i++;
+                }
+                TempData["locationID"] = TempData["locationID"];
                 return View(storeInventory);
             } catch
             {
@@ -130,19 +138,25 @@ namespace StoreWebUI.Controllers
         // POST: Inventory/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(List<InventoryVM> inventoryVM, int id, IFormCollection collection)
+        public ActionResult Edit(InventoryVM inventoryVM, int id, IFormCollection collection)
         {
             int i = 0;
             try
             {
                 List<Inventory> editInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString()));
-                foreach (InventoryVM inventory in inventoryVM)
+                List<Product> products = _productBL.GetAllProducts();
+                List<string> itemNames = new List<string>();
+                foreach (Product item in products)
                 {
-                    editInventory[i].Quantity = inventory.Quantity;
-                    _inventoryBL.EditInventory(editInventory[i]);
+                    itemNames.Add(item.ItemName);
+                }
+                foreach (Inventory inventory in editInventory)
+                {
+                    inventory.Quantity = Int32.Parse(collection[itemNames[i]]);
+                    _inventoryBL.EditInventory(inventory);
                     i++;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Location");
             }
             catch
             {
