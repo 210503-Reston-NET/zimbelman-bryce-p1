@@ -24,4 +24,7 @@
     <Folder Include="Views\Location\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Inventory\Index.cshtml" />
+  </ItemGroup>
 </Project>

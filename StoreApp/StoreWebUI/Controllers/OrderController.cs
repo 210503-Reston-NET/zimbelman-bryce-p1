@@ -194,70 +194,45 @@ namespace StoreWebUI.Controllers
             return View();
         }
 
-        // GET: Order/Create
-        public ActionResult Create()
+        // Get
+        public ActionResult Search()
         {
             return View();
         }
 
-        // POST: Order/Create
+        // Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Search(int orderId)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                if (ModelState.IsValid)
+                {
+                    TempData["OrderID"] = orderId;
+                    return RedirectToAction(nameof(ViewOrder));
+                }
+            } catch
             {
                 return View();
             }
-        }
-
-        // GET: Order/Edit/5
-        public ActionResult Edit(int id)
-        {
             return View();
         }
 
-        // POST: Order/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // Get
+        public ActionResult ViewOrder(OrderVM orderVM)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Order/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Order/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                List<OrderVM> customerOrder = new List<OrderVM>();
+                Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                Location location = _locationBL.GetLocationById(order.LocationID);
+                ViewData["Customer"] = customer.FirstName + " " + customer.LastName;
+                ViewData["Location"] = location.StoreName;
+                customerOrder.Add(new OrderVM(order));
+                return View(customerOrder);
+            } catch
             {
                 return View();
             }

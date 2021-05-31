@@ -38,11 +38,13 @@ namespace StoreWebUI.Controllers
             
         }
 
+        // Get
         public ActionResult Index()
         {
             return View();
         }
 
+        // Post
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(string firstName, string lastName)
