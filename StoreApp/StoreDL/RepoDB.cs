@@ -123,7 +123,7 @@ namespace StoreDL
         {
             Log.Information("DL sent list of all orders to BL");
             return _context.Orders.Select(order =>
-            new Order(order.LocationID, order.CustomerID, order.OrderID, order.Total, order.OrderDate)
+            new Order(order.OrderID, order.CustomerID, order.LocationID, order.Total, order.OrderDate)
             ).ToList();
         }
 

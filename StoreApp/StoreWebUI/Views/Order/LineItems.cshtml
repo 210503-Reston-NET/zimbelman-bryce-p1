@@ -1,31 +1,27 @@
-@model StoreWebUI.Models.ProductVM
+@model IEnumerable<StoreWebUI.Models.ProductVM>
+@{int i = 0; }
+@{ ViewData["Title"] = "Edit"; }
 
-@{
-    ViewData["Title"] = "LineItems";
-}
+<h1>Order</h1>
 
-<h1>LineItems</h1>
-
-<h4>Product</h4>
+<h4>Select Items</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="LineItems"> 
+        <form asp-action="LineItems">
+            @foreach (ProductVM item in Model)
+            {
+                string itemName = "itemName" + i;
+<div class="form-group">
+    <label class="control-label">@ViewData[itemName].ToString()</label>
+    <input name="@ViewData[itemName]" class="form-control" id="@ViewData[itemName]" />
+    <span class="text-danger"></span>
+</div>                i++;
+            }
             <div class="form-group">
-                <label for="product"class="control-label"></label>
-                <input class="form-control" id="product" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Checkout" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

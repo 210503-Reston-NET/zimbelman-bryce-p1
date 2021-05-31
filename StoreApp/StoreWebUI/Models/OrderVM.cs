@@ -13,9 +13,9 @@ namespace StoreWebUI.Models
 
         public OrderVM(Order order)
         {
+            LocationID = order.LocationID;
             OrderID = order.OrderID;
             CustomerID = order.CustomerID;
-            LocationID = order.LocationID;
             Total = order.Total;
             OrderDate = order.OrderDate;
         }

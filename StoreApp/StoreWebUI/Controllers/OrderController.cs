@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreBL;
 using StoreModels;
+using StoreWebUI.Models;
 
 namespace StoreWebUI.Controllers
 {
@@ -14,12 +15,16 @@ namespace StoreWebUI.Controllers
         public IOrderBL _orderBL;
         public ICustomerBL _customerBL;
         public ILocationBL _locationBL;
+        public IProductBL _productBL;
+        public ILineItemBL _lineItemBL;
 
-        public OrderController(IOrderBL orderBL, ICustomerBL customerBL, ILocationBL locationBL)
+        public OrderController(IOrderBL orderBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, ILineItemBL lineItemBL)
         {
             _orderBL = orderBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
+            _productBL = productBL;
+            _lineItemBL = lineItemBL;
         }
 
         // GET: Order
@@ -54,6 +59,8 @@ namespace StoreWebUI.Controllers
         // Get
         public ActionResult Location()
         {
+            TempData["firstName"] = TempData["firstName"];
+            TempData["lastName"] = TempData["lastName"];
             return View();
         }
 
@@ -73,7 +80,7 @@ namespace StoreWebUI.Controllers
                     {
                         return View();
                     }
-                    Order newOrder = new Order(location.LocationID, customer.CustomerID, 0, DateTime.Now.ToString());
+                    Order newOrder = new Order(customer.CustomerID, location.LocationID, 0, DateTime.Now.ToString());
                     _orderBL.AddOrder(newOrder, location, customer);
                     List<Order> orders = _orderBL.GetAllOrders();
                     // Retrieves latest orderID
@@ -95,14 +102,95 @@ namespace StoreWebUI.Controllers
         // Get
         public ActionResult LineItems()
         {
-            return View();
+            try
+            {
+                int i = 0;
+                List<ProductVM> products = _productBL.GetAllProducts().Select(prod => new ProductVM(prod)).ToList();
+                foreach (ProductVM item in products)
+                {
+                    string itemName = "itemName" + i;
+                    ViewData.Add(itemName, item.ItemName);
+                    i++;
+                }
+                TempData["OrderID"] = TempData["OrderID"];
+                return View(products);
+            } catch
+            {
+                return View();
+            }
         }
 
         // Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LineItems(List<int> quantity)
+        public ActionResult LineItems(IFormCollection collection)
         {
+            try
+            {
+                List<Product> products = _productBL.GetAllProducts();
+                List<int> quantity = new List<int>();
+                foreach (Product item in products)
+                {
+                    LineItem newLineItem = new LineItem(item.ProductID, Int32.Parse(collection[item.ItemName]), Int32.Parse(TempData["OrderID"].ToString()));
+                    quantity.Add(Int32.Parse(collection[item.ItemName]));
+                    _lineItemBL.AddLineItem(newLineItem, item);
+                }
+                double orderTotal = _productBL.GetTotal(quantity);
+                TempData["OrderTotal"] = orderTotal.ToString();
+                TempData["OrderID"] = TempData["OrderID"];
+                return RedirectToAction(nameof(OrderConfirmation));
+            } catch
+            {
+                return View();
+            }
+        }
+
+        // Get
+        public ActionResult OrderConfirmation()
+        {
+            Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+            Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+            string customerName = customer.FirstName + " " + customer.LastName;
+            Location location = _locationBL.GetLocationById(order.LocationID);
+            ViewData["Total"] = TempData["OrderTotal"];
+            ViewData["Customer"] = customerName;
+            ViewData["Location"] = location.StoreName;
+            ViewData["OrderID"] = TempData["OrderID"];
+            TempData["OrderTotal"] = TempData["OrderTotal"];
+            TempData["OrderID"] = TempData["OrderID"];
+            OrderVM orderVM = new OrderVM(order);
+            return View(orderVM);
+        }
+
+        // Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult OrderConfirmation(string confirm)
+        {
+            if (ModelState.IsValid && !String.IsNullOrWhiteSpace(confirm))
+            {
+                try
+                {
+                    switch(confirm)
+                    {
+                        case "Place Order":
+                            Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                            order.Total = Double.Parse(TempData["OrderTotal"].ToString());
+                            Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                            Location location = _locationBL.GetLocationById(order.LocationID);
+                            _orderBL.UpdateOrder(order, location, customer);
+                            return RedirectToAction("Index", "Home");
+
+                        case "Cancel Order":
+                            Order cancelOrder = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                            _orderBL.DeleteOrder(cancelOrder);
+                            return RedirectToAction("Index", "Home");
+                    }
+                } catch
+                {
+                    return View();
+                }
+            }
             return View();
         }
 

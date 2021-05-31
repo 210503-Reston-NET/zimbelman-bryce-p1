@@ -8,7 +8,7 @@ namespace StoreModels
     /// </summary>
     public class Order
     {
-        public Order(int locationId, int customerId, double total, string orderDate) {
+        public Order(int customerId, int locationId, double total, string orderDate) {
             this.LocationID = locationId;
             this.CustomerID = customerId;
             this.Total = total;
