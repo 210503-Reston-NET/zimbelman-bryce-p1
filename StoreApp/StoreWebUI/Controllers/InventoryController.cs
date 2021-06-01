@@ -138,7 +138,8 @@ namespace StoreWebUI.Controllers
                     ViewData.Add(itemName, product.ItemName);
                     i++;
                 }
-                TempData["locationID"] = TempData["locationID"];
+                string locationId = TempData["locationID"].ToString();
+                TempData["locationID"] = locationId;
                 return View(storeInventory);
             } catch
             {

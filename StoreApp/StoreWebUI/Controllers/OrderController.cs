@@ -61,8 +61,10 @@ namespace StoreWebUI.Controllers
         // Get
         public ActionResult Location()
         {
-            TempData["firstName"] = TempData["firstName"];
-            TempData["lastName"] = TempData["lastName"];
+            string firstName = TempData["firstName"].ToString();
+            TempData["firstName"] = firstName;
+            string lastName = TempData["lastName"].ToString();
+            TempData["lastName"] = lastName;
             return View();
         }
 
@@ -120,7 +122,8 @@ namespace StoreWebUI.Controllers
                     ViewData.Add(itemName, item.ItemName);
                     i++;
                 }
-                TempData["OrderID"] = TempData["OrderID"];
+                string orderId = TempData["OrderID"].ToString();
+                TempData["OrderID"] = orderId;
                 return View(products);
             } catch
             {
@@ -148,7 +151,8 @@ namespace StoreWebUI.Controllers
                 Log.Information("UI request total form BL");
                 double orderTotal = _productBL.GetTotal(quantity);
                 TempData["OrderTotal"] = orderTotal.ToString();
-                TempData["OrderID"] = TempData["OrderID"];
+                string orderId = TempData["OrderID"].ToString();
+                TempData["OrderID"] = orderId;
                 Log.Information("Redirected to Order Controller: OrderConfirmation");
                 return RedirectToAction(nameof(OrderConfirmation));
             } catch
@@ -171,8 +175,10 @@ namespace StoreWebUI.Controllers
             ViewData["Customer"] = customerName;
             ViewData["Location"] = location.StoreName;
             ViewData["OrderID"] = TempData["OrderID"];
-            TempData["OrderTotal"] = TempData["OrderTotal"];
-            TempData["OrderID"] = TempData["OrderID"];
+            string orderTotal = TempData["OrderTotal"].ToString();
+            TempData["OrderTotal"] = orderTotal;
+            string orderId = TempData["OrderID"].ToString();
+            TempData["OrderID"] = orderId;
             OrderVM orderVM = new OrderVM(order);
             return View(orderVM);
         }
