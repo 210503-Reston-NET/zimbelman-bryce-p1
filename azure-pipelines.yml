@@ -22,7 +22,6 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '210503-Reston-NET_zimbelman-bryce-p1'
     projectName: 'zimbelman-bryce-p1'
-    extraProperties: 'sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml'
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
@@ -38,15 +37,7 @@ steps:
   displayName: Test
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
-    publishTestResults: true
     projects: '**/StoreApp/StoreTests/*.csproj'
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish Code Coverage Report'
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/App/Tests/'
 - task: SonarCloudAnalyze@1
   displayName: Run Code Analysis
 - task: SonarCloudPublish@1
