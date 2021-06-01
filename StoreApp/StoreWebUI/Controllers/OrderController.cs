@@ -84,7 +84,7 @@ namespace StoreWebUI.Controllers
                     int orderID = 0;
                     if (location == null)
                     {
-                        return View();
+                        return RedirectToAction(nameof(Index));
                     }
                     Order newOrder = new Order(customer.CustomerID, location.LocationID, 0, DateTime.Now.ToString());
                     Log.Information("UI sent new order to BL");
@@ -100,10 +100,10 @@ namespace StoreWebUI.Controllers
                     Log.Information("Redirected to Order Controller: LineItems");
                     return RedirectToAction(nameof(LineItems));
                 }
-                return View();
+                return RedirectToAction(nameof(Index));
             } catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
             
         }
@@ -127,7 +127,7 @@ namespace StoreWebUI.Controllers
                 return View(products);
             } catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -141,6 +141,13 @@ namespace StoreWebUI.Controllers
                 Log.Information("UI attempt to retrieve list of products");
                 List<Product> products = _productBL.GetAllProducts();
                 List<int> quantity = new List<int>();
+                foreach (Product item in products)
+                {
+                    if (String.IsNullOrWhiteSpace(collection[item.ItemName]))
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
                 foreach (Product item in products)
                 {
                     LineItem newLineItem = new LineItem(item.ProductID, Int32.Parse(collection[item.ItemName]), Int32.Parse(TempData["OrderID"].ToString()));
@@ -157,7 +164,7 @@ namespace StoreWebUI.Controllers
                 return RedirectToAction(nameof(OrderConfirmation));
             } catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 

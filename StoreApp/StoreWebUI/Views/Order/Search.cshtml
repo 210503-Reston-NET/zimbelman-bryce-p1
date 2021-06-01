@@ -1,8 +1,6 @@
 @model StoreWebUI.Models.OrderVM
 
-@{
-    ViewData["Title"] = "Order Search";
-}
+@{ ViewData["Title"] = "Order Search"; }
 
 <h1>View Order</h1>
 
@@ -24,3 +22,6 @@
     </div>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

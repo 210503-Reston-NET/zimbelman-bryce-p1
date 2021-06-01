@@ -1,8 +1,6 @@
 @model StoreWebUI.Models.ProductVM
 
-@{
-    ViewData["Title"] = "Create";
-}
+@{ ViewData["Title"] = "Create"; }
 
 <h1>Add a Product</h1>
 
@@ -38,3 +36,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

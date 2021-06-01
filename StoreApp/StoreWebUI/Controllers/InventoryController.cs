@@ -166,6 +166,16 @@ namespace StoreWebUI.Controllers
                 }
                 foreach (Inventory inventory in editInventory)
                 {
+                    if (String.IsNullOrWhiteSpace(collection[itemNames[i]]))
+                    {
+                        return RedirectToAction("Index", "Location");
+                    }
+                    i++;
+                }
+                // Reset i for next loop
+                i = 0;
+                foreach (Inventory inventory in editInventory)
+                {
                     inventory.Quantity = Int32.Parse(collection[itemNames[i]]);
                     Log.Information("UI sent eddited inventory to BL");
                     _inventoryBL.EditInventory(inventory);
@@ -176,7 +186,7 @@ namespace StoreWebUI.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Location");
             }
         }
     }

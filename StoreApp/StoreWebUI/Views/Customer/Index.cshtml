@@ -1,5 +1,5 @@
 @model StoreWebUI.Models.CustomerVM
-@using System 
+@using System
 @{ ViewData["Title"] = "Index"; }
 
 <h1>Search For A Customer</h1>
@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" id="firstName" />
-                <span asp-validation-for="FirstName" class ="text-danger"></span>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
@@ -29,3 +29,6 @@
     </div>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

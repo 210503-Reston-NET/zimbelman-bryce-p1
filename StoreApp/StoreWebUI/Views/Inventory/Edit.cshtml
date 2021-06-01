@@ -1,8 +1,6 @@
 @model IEnumerable<StoreWebUI.Models.InventoryVM>
 @{int i = 0; }
-@{
-    ViewData["Title"] = "Edit";
-}
+@{ ViewData["Title"] = "Edit"; }
 
 <h1>Edit Store Inventory</h1>
 
@@ -14,12 +12,13 @@
             @foreach (InventoryVM item in Model)
             {
                 string itemName = "itemName" + i;
-             <div class="form-group">
-                 <label class="control-label">@ViewData[itemName].ToString() Current: @item.Quantity</label>
-                <input name="@ViewData[itemName]" class="form-control" id="@ViewData[itemName]" />
-             <span class="text-danger"></span>
-        </div>
-                i++; }
+                <div class="form-group">
+                    <label class="control-label">@ViewData[itemName].ToString() Current: @item.Quantity</label>
+                    <input name="@ViewData[itemName]" class="form-control" id="@ViewData[itemName]" />
+                    <span class="text-danger"></span>
+                </div>
+                i++;
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -31,3 +30,6 @@
     <a asp-controller="Location" asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
