@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -33,6 +32,7 @@ namespace StoreWebUI.Controllers
             List<CustomerVM> customerList = new List<CustomerVM>();
             try
             {
+                Log.Information("UI attempt to retrieve customer information");
                 Customer customerModel = _customerBL.SearchCustomer(TempData["firstName"].ToString(), TempData["lastName"].ToString());
                 CustomerVM customer = new CustomerVM(customerModel);
                 customerList.Add(customer);
@@ -62,6 +62,7 @@ namespace StoreWebUI.Controllers
                 {
                     TempData["firstName"] = firstName;
                     TempData["lastName"] = lastName;
+                    Log.Information("Redirect to Customer Controller: List");
                     return RedirectToAction(nameof(List));
                 }
                 return View();
@@ -94,6 +95,7 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI sent customer to BL");
                     _customerBL.AddCustomer(new Customer
                     {
                         FirstName = customerVM.FirstName,
@@ -106,6 +108,7 @@ namespace StoreWebUI.Controllers
                         );
                     TempData["firstName"] = customerVM.FirstName;
                     TempData["lastName"] = customerVM.LastName;
+                    Log.Information("Redirect to Customer Controller: List");
                     return RedirectToAction(nameof(List));
                 }
                 return View();
@@ -119,6 +122,7 @@ namespace StoreWebUI.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
+            Log.Information("UI attempt to retrieve customer information");
             return View(new CustomerVM(_customerBL.SearchCustomer(id)));
         }
 
@@ -131,6 +135,7 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI attempt to retrieve customer information");
                     Customer editCustomer = _customerBL.SearchCustomer(id);
                     editCustomer.FirstName = customerVM.FirstName;
                     editCustomer.LastName = customerVM.LastName;
@@ -138,9 +143,11 @@ namespace StoreWebUI.Controllers
                     editCustomer.Birthdate = customerVM.Birthdate;
                     editCustomer.PhoneNumber = customerVM.PhoneNumber;
                     editCustomer.MailAddress = customerVM.MailAddress;
+                    Log.Information("UI sent edited customer to BL");
                     _customerBL.EditCustomer(editCustomer);
                     TempData["firstName"] = customerVM.FirstName;
                     TempData["lastName"] = customerVM.LastName;
+                    Log.Information("Redirect to Customer Controller: List");
                     return RedirectToAction(nameof(List));
                 }
                 return View();
@@ -154,6 +161,7 @@ namespace StoreWebUI.Controllers
         // GET: Customer/Delete/5
         public ActionResult Delete(int id)
         {
+            Log.Information("UI attempt to retrieve customer information");
             return View(new CustomerVM(_customerBL.SearchCustomer(id)));
         }
 
@@ -164,7 +172,9 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve customer information");
                 _customerBL.DeleteCustomer(_customerBL.SearchCustomer(id));
+                Log.Information("Redirect to Customer Controller: Index");
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -179,15 +189,18 @@ namespace StoreWebUI.Controllers
             try
             {
                 int i = 0;
+                Log.Information("UI attempt to retrieve list of customer orders from BL");
                 List<OrderVM> orders = _orderBL.GetCustomerOrders(id).Select(ord => new OrderVM(ord)).ToList();
                 foreach (OrderVM order in orders)
                 {
                     string customerSelector = "customer" + i;
+                    Log.Information("UI attempt to retrieve customer information");
                     Customer customer = _customerBL.SearchCustomer(order.CustomerID);
                     string customerName = customer.FirstName + " " + customer.LastName;
                     ViewData.Add(customerSelector, customerName);
 
                     string storeSelector = "location" + i;
+                    Log.Information("UI attempt to retrieve location information");
                     Location location = _locationBL.GetLocationById(order.LocationID);
                     ViewData.Add(storeSelector, location.StoreName);
 
@@ -197,6 +210,7 @@ namespace StoreWebUI.Controllers
             }
             catch
             {
+                Log.Information("Redirect to Customer Controller: List");
                 return RedirectToAction(nameof(List));
             }
         }
@@ -211,6 +225,7 @@ namespace StoreWebUI.Controllers
                 try
                 {
                     List<OrderVM> sortedOrders = new List<OrderVM>();
+                    Log.Information("UI attempt to retrieve list of customer orders from BL");
                     List<OrderVM> orders = _orderBL.GetCustomerOrders(id).Select(ord => new OrderVM(ord)).ToList();
                     switch (sort)
                     {
@@ -245,15 +260,18 @@ namespace StoreWebUI.Controllers
         private void SetListSelectors(int id)
         {
             int i = 0;
+            Log.Information("UI attempt to retrieve list of customer orders from BL");
             List<OrderVM> orders = _orderBL.GetCustomerOrders(id).Select(ord => new OrderVM(ord)).ToList();
             foreach (OrderVM order in orders)
             {
                 string customerSelector = "customer" + i;
+                Log.Information("UI attempt to retrieve customer information");
                 Customer customer = _customerBL.SearchCustomer(order.CustomerID);
                 string customerName = customer.FirstName + " " + customer.LastName;
                 ViewData.Add(customerSelector, customerName);
 
                 string storeSelector = "location" + i;
+                Log.Information("UI attempt to retrieve location information");
                 Location location = _locationBL.GetLocationById(order.LocationID);
                 ViewData.Add(storeSelector, location.StoreName);
 

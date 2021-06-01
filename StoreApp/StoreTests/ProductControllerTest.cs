@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using StoreBL;
-using StoreDL;
 using StoreModels;
 using StoreWebUI.Controllers;
 using StoreWebUI.Models;

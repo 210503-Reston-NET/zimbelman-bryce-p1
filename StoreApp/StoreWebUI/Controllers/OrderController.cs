@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreBL;
 using StoreModels;
 using StoreWebUI.Models;
+using Serilog;
 
 namespace StoreWebUI.Controllers
 {
@@ -41,10 +41,12 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI attempt to retrieve customer");
                     if (_customerBL.SearchCustomer(firstName, lastName) != null)
                     {
                         TempData["firstName"] = firstName;
                         TempData["lastName"] = lastName;
+                        Log.Information("Redirected to Order Controller: Location");
                         return RedirectToAction(nameof(Location));
                     }
                 }
@@ -73,7 +75,9 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI attempt to retrieve customer");
                     Customer customer = _customerBL.SearchCustomer(TempData["firstName"].ToString(), TempData["lastName"].ToString());
+                    Log.Information("UI attempt to retrieve location");
                     Location location = _locationBL.GetLocation(storeName);
                     int orderID = 0;
                     if (location == null)
@@ -81,7 +85,9 @@ namespace StoreWebUI.Controllers
                         return View();
                     }
                     Order newOrder = new Order(customer.CustomerID, location.LocationID, 0, DateTime.Now.ToString());
+                    Log.Information("UI sent new order to BL");
                     _orderBL.AddOrder(newOrder, location, customer);
+                    Log.Information("UI attempt to retrieve list of orders");
                     List<Order> orders = _orderBL.GetAllOrders();
                     // Retrieves latest orderID
                     foreach (Order order in orders)
@@ -89,6 +95,7 @@ namespace StoreWebUI.Controllers
                         orderID = order.OrderID;
                     }
                     TempData["OrderID"] = orderID;
+                    Log.Information("Redirected to Order Controller: LineItems");
                     return RedirectToAction(nameof(LineItems));
                 }
                 return View();
@@ -105,6 +112,7 @@ namespace StoreWebUI.Controllers
             try
             {
                 int i = 0;
+                Log.Information("UI attempt to retrieve list of products");
                 List<ProductVM> products = _productBL.GetAllProducts().Select(prod => new ProductVM(prod)).ToList();
                 foreach (ProductVM item in products)
                 {
@@ -127,17 +135,21 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve list of products");
                 List<Product> products = _productBL.GetAllProducts();
                 List<int> quantity = new List<int>();
                 foreach (Product item in products)
                 {
                     LineItem newLineItem = new LineItem(item.ProductID, Int32.Parse(collection[item.ItemName]), Int32.Parse(TempData["OrderID"].ToString()));
                     quantity.Add(Int32.Parse(collection[item.ItemName]));
+                    Log.Information("UI sent new line item to BL");
                     _lineItemBL.AddLineItem(newLineItem, item);
                 }
+                Log.Information("UI request total form BL");
                 double orderTotal = _productBL.GetTotal(quantity);
                 TempData["OrderTotal"] = orderTotal.ToString();
                 TempData["OrderID"] = TempData["OrderID"];
+                Log.Information("Redirected to Order Controller: OrderConfirmation");
                 return RedirectToAction(nameof(OrderConfirmation));
             } catch
             {
@@ -148,9 +160,12 @@ namespace StoreWebUI.Controllers
         // Get
         public ActionResult OrderConfirmation()
         {
+            Log.Information("UI attempt to retrieve order");
             Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+            Log.Information("UI attempt to retrieve customer");
             Customer customer = _customerBL.SearchCustomer(order.CustomerID);
             string customerName = customer.FirstName + " " + customer.LastName;
+            Log.Information("UI attempt to retrieve location");
             Location location = _locationBL.GetLocationById(order.LocationID);
             ViewData["Total"] = TempData["OrderTotal"];
             ViewData["Customer"] = customerName;
@@ -174,16 +189,23 @@ namespace StoreWebUI.Controllers
                     switch(confirm)
                     {
                         case "Place Order":
+                            Log.Information("UI attempt to retrieve order");
                             Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
                             order.Total = Double.Parse(TempData["OrderTotal"].ToString());
+                            Log.Information("UI attempt to retrieve customer");
                             Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                            Log.Information("UI attempt to retrieve location");
                             Location location = _locationBL.GetLocationById(order.LocationID);
+                            Log.Information("UI sent updated order to BL");
                             _orderBL.UpdateOrder(order, location, customer);
                             return RedirectToAction("Index", "Home");
 
                         case "Cancel Order":
+                            Log.Information("UI attempt to retrieve order");
                             Order cancelOrder = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                            Log.Information("UI request order deletion to BL");
                             _orderBL.DeleteOrder(cancelOrder);
+                            Log.Information("Redirected to Home Controller: Index");
                             return RedirectToAction("Index", "Home");
                     }
                 } catch
@@ -210,6 +232,7 @@ namespace StoreWebUI.Controllers
                 if (ModelState.IsValid)
                 {
                     TempData["OrderID"] = orderId;
+                    Log.Information("Redirected to Order Controller: ViewOrder");
                     return RedirectToAction(nameof(ViewOrder));
                 }
             } catch
@@ -225,8 +248,11 @@ namespace StoreWebUI.Controllers
             try
             {
                 List<OrderVM> customerOrder = new List<OrderVM>();
+                Log.Information("UI attempt to retrieve order");
                 Order order = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                Log.Information("UI attempt to retrieve customer");
                 Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                Log.Information("UI attempt to retrieve location");
                 Location location = _locationBL.GetLocationById(order.LocationID);
                 ViewData["Customer"] = customer.FirstName + " " + customer.LastName;
                 ViewData["Location"] = location.StoreName;
@@ -234,6 +260,7 @@ namespace StoreWebUI.Controllers
                 return View(customerOrder);
             } catch
             {
+                Log.Information("Redirected to Order Controller: Search");
                 return RedirectToAction(nameof(Search));
             }
         }

@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreModels;
 using StoreBL;
 using StoreWebUI.Models;
+using Serilog;
 
 namespace StoreWebUI.Controllers
 {
@@ -21,13 +19,8 @@ namespace StoreWebUI.Controllers
         // GET: Product
         public ActionResult Index()
         {
+            Log.Information("UI attempt to retrieve product");
             return View(_productBL.GetAllProducts().Select(product => new ProductVM(product)).ToList());
-        }
-
-        // GET: Product/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
         }
 
         // GET: Product/Create
@@ -45,12 +38,14 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI sent new product to BL");
                     _productBL.AddProduct(new Product {
                         ItemName = productVM.ItemName,
                         Price = productVM.Price,
                         Description = productVM.Description
 
                     });
+                    Log.Information("Redirected to Product Controller: Index");
                     return RedirectToAction(nameof(Index));
                 }
                 return View();
@@ -64,6 +59,7 @@ namespace StoreWebUI.Controllers
         // GET: Product/Edit/5
         public ActionResult Edit(int id)
         {
+            Log.Information("UI attempt to retrieve product");
             return View(new ProductVM(_productBL.GetProductById(id)));
         }
 
@@ -76,10 +72,12 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI attempt to retrieve product");
                     Product editProduct = _productBL.GetProductById(id);
                     editProduct.ItemName = productVM.ItemName;
                     editProduct.Price = productVM.Price;
                     editProduct.Description = productVM.Description;
+                    Log.Information("UI sent edited product to BL");
                     _productBL.EditProduct(editProduct);
                     return RedirectToAction(nameof(Index));
                 }
@@ -94,6 +92,7 @@ namespace StoreWebUI.Controllers
         // GET: Product/Delete/5
         public ActionResult Delete(int id)
         {
+            Log.Information("UI attempt to retrieve product");
             return View(new ProductVM(_productBL.GetProductById(id)));
         }
 
@@ -104,7 +103,9 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve product");
                 _productBL.DeleteProduct(_productBL.GetProductById(id));
+                Log.Information("Redirected to Product Controller: Index");
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using StoreBL;
 using StoreModels;
 using StoreWebUI.Models;
+using Serilog;
 
 namespace StoreWebUI.Controllers
 {
@@ -23,7 +24,9 @@ namespace StoreWebUI.Controllers
 
         private void IDToNameConverter()
         {
+            Log.Information("UI attempt to retrieve list of locations");
             List<Location> locations = _locationBL.GetAllLocations();
+            Log.Information("UI attempt to retrieve list of products");
             List<Product> products = _productBL.GetAllProducts();
             foreach (Location location in locations)
             {
@@ -41,7 +44,7 @@ namespace StoreWebUI.Controllers
         public ActionResult Index()
         {
             IDToNameConverter();
-
+            Log.Information("UI attempt to retrieve list of inventories");
             return View(_inventoryBL.GetAllInventories().Select(inventory => new InventoryVM(inventory)).ToList());
         }
 
@@ -54,7 +57,9 @@ namespace StoreWebUI.Controllers
         // GET: Inventory/Create
         public ActionResult Create()
         {
+            Log.Information("UI attempt to retrieve list of locations");
             List<Location> locations = _locationBL.GetAllLocations();
+            Log.Information("UI attempt to retrieve list of products");
             List<Product> products = _productBL.GetAllProducts();
             List<string> storeNames = new List<string>();
             List<string> itemNames = new List<string>();
@@ -79,7 +84,9 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve list of locations");
                 List<Location> locations = _locationBL.GetAllLocations();
+                Log.Information("UI attempt to retrieve list of locations");
                 List<Product> products = _productBL.GetAllProducts();
                 List<string> storeNames = new List<string>();
                 List<string> itemNames = new List<string>();
@@ -95,6 +102,7 @@ namespace StoreWebUI.Controllers
                 ViewData.Add("products", itemNames);
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI sent new inventory to BL");
                     _inventoryBL.AddInventory(new Inventory
                     {
                         LocationID = inventoryVM.LocationID,
@@ -102,6 +110,7 @@ namespace StoreWebUI.Controllers
                         Quantity = inventoryVM.Quantity
                     }
                        );
+                    Log.Information("Redireced to Inventory Controller: Index");
                     return RedirectToAction(nameof(Index));
                 }
                 return View(inventoryVM);
@@ -119,7 +128,9 @@ namespace StoreWebUI.Controllers
             try
             {
                 int i = 0;
+                Log.Information("UI attempt to retrieve list of products");
                 List<Product> products = _productBL.GetAllProducts();
+                Log.Information("UI attempt to retrieve store inventory");
                 List<InventoryVM> storeInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString())).Select(inven => new InventoryVM(inven)).ToList();
                 foreach (Product product in products)
                 {
@@ -143,7 +154,9 @@ namespace StoreWebUI.Controllers
             int i = 0;
             try
             {
+                Log.Information("UI attempt to retrieve store inventory");
                 List<Inventory> editInventory = _inventoryBL.GetStoreInventoryByLocation(Int32.Parse(TempData["locationID"].ToString()));
+                Log.Information("UI attempt to retrieve list of products");
                 List<Product> products = _productBL.GetAllProducts();
                 List<string> itemNames = new List<string>();
                 foreach (Product item in products)
@@ -153,33 +166,12 @@ namespace StoreWebUI.Controllers
                 foreach (Inventory inventory in editInventory)
                 {
                     inventory.Quantity = Int32.Parse(collection[itemNames[i]]);
+                    Log.Information("UI sent eddited inventory to BL");
                     _inventoryBL.EditInventory(inventory);
                     i++;
                 }
+                Log.Information("Redirected to Location Controller: Index");
                 return RedirectToAction("Index", "Location");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Inventory/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Inventory/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
             }
             catch
             {

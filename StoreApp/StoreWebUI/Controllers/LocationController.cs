@@ -31,6 +31,7 @@ namespace StoreWebUI.Controllers
         // GET: Location
         public ActionResult Index()
         {
+            Log.Information("UI attempt to retrieve list of locations");
             return View(_locationBL.GetAllLocations().Select(location => new LocationVM(location)).ToList());
         }
 
@@ -55,6 +56,7 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI sent new location to BL");
                     _locationBL.AddLocation(new Location
                     {
                         StoreName = locationVM.StoreName,
@@ -62,11 +64,13 @@ namespace StoreWebUI.Controllers
                         State = locationVM.State,
                         Address = locationVM.Address
                     });
-
+                    Log.Information("UI attempt to retrieve list of products");
                     List<Product> products = _productBL.GetAllProducts();
+                    Log.Information("UI attempt to retrieve location");
                     Location location = _locationBL.GetLocation(locationVM.StoreName);
                     foreach (Product item in products)
                     {
+                        Log.Information("UI sent new inventory to BL");
                         _inventoryBL.AddInventory(new Inventory
                         {
                             LocationID = location.LocationID,
@@ -89,6 +93,7 @@ namespace StoreWebUI.Controllers
         // GET: Location/Edit/5
         public ActionResult Edit(int id)
         {
+            Log.Information("UI attempt to retrieve location");
             return View(new LocationVM(_locationBL.GetLocationById(id)));
         }
 
@@ -101,12 +106,15 @@ namespace StoreWebUI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Log.Information("UI attempt to retrieve location");
                     Location editLocation = _locationBL.GetLocationById(id);
                     editLocation.StoreName = locationVM.StoreName;
                     editLocation.City = locationVM.City;
                     editLocation.State = locationVM.State;
                     editLocation.Address = locationVM.Address;
+                    Log.Information("UI sent edited location to BL");
                     _locationBL.EditLocation(editLocation);
+                    Log.Information("Redirected to Location Controller: Index");
                     return RedirectToAction(nameof(Index));
                 }
                 return View();
@@ -121,6 +129,7 @@ namespace StoreWebUI.Controllers
         // GET: Location/Delete/5
         public ActionResult Delete(int id)
         {
+            Log.Information("UI attempt to retrieve location");
             return View(new LocationVM(_locationBL.GetLocationById(id)));
         }
 
@@ -131,7 +140,9 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve location");
                 _locationBL.DeleteLocation(_locationBL.GetLocationById(id));
+                Log.Information("Redirected to Location Controller: Index");
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -144,6 +155,7 @@ namespace StoreWebUI.Controllers
         public ActionResult Inventory(int id)
         {
             TempData["locationID"] = id;
+            Log.Information("Redirected to Inventory Controller: Edit");
             return RedirectToAction("Edit", "Inventory");
         }
 
@@ -152,11 +164,13 @@ namespace StoreWebUI.Controllers
         {
             try
             {
+                Log.Information("UI attempt to retrieve list of location orders");
                 List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
                 SetListSelectors(id);
                 return View(orders);
             } catch
             {
+                Log.Information("Redirected to Location Controller: Index");
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -171,6 +185,7 @@ namespace StoreWebUI.Controllers
                 try
                 {
                     List<OrderVM> sortedOrders = new List<OrderVM>();
+                    Log.Information("UI attempt to retrieve list of location orders");
                     List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
                     switch (sort)
                     {
@@ -204,15 +219,18 @@ namespace StoreWebUI.Controllers
         private void SetListSelectors(int id)
         {
             int i = 0;
+            Log.Information("UI attempt to retrieve list of location orders");
             List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
             foreach (OrderVM order in orders)
             {
                 string customerSelector = "customer" + i;
+                Log.Information("UI attempt to retrieve customer");
                 Customer customer = _customerBL.SearchCustomer(order.CustomerID);
                 string customerName = customer.FirstName + " " + customer.LastName;
                 ViewData.Add(customerSelector, customerName);
 
                 string storeSelector = "location" + i;
+                Log.Information("UI attempt to retrieve location");
                 Location location = _locationBL.GetLocationById(order.LocationID);
                 ViewData.Add(storeSelector, location.StoreName);
 
