@@ -33,12 +33,12 @@ steps:
   inputs:
     command: 'build'
     projects: $(solution)
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: 'test'
-    projects: '**/StoreApp/StoreTests/*.csproj'
-    arguments: --configuration $(buildConfiguration) --collect "Code Coverage"
+- # task: DotNetCoreCLI@2
+  # displayName: Test
+  # inputs:
+    # command: 'test'
+    # projects: '**/StoreApp/StoreTests/*.csproj'
+    # arguments: --configuration $(buildConfiguration) --collect "Code Coverage"
 - task: PublishCodeCoverageResults@1
   displayName: SonarCloud Code Coverage
   inputs:
