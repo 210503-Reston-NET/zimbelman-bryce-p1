@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StoreBL;
 using StoreWebUI.Models;
 using StoreModels;
+using Serilog;
 
 namespace StoreWebUI.Controllers
 {
@@ -151,27 +152,72 @@ namespace StoreWebUI.Controllers
         {
             try
             {
-                int i = 0;
                 List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
-                foreach (OrderVM order in orders)
-                {
-                    string customerSelector = "customer" + i;
-                    Customer customer = _customerBL.SearchCustomer(order.CustomerID);
-                    string customerName = customer.FirstName + " " + customer.LastName;
-                    ViewData.Add(customerSelector, customerName);
-
-                    string storeSelector = "location" + i;
-                    Location location = _locationBL.GetLocationById(order.LocationID);
-                    ViewData.Add(storeSelector, location.StoreName);
-
-                    i++;
-                }
+                SetListSelectors(id);
                 return View(orders);
             } catch
             {
                 return RedirectToAction(nameof(Index));
             }
-            
+        }
+
+        // Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ViewOrders(int id, string sort)
+        {
+            if (ModelState.IsValid && !String.IsNullOrWhiteSpace(sort))
+            {
+                try
+                {
+                    List<OrderVM> sortedOrders = new List<OrderVM>();
+                    List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
+                    switch (sort)
+                    {
+                        case "Sort By Cost":
+                            Log.Information("Sort by Cost Seleceted");
+                            sortedOrders = orders.OrderBy(ord => ord.Total).ToList();
+                            SetListSelectors(id);
+                            return View(sortedOrders);
+
+                        case "Sort By Date Ascending":
+                            Log.Information("Sort by Date Ascending Selected");
+                            sortedOrders = orders.OrderByDescending(ord => ord.OrderDate).ToList();
+                            SetListSelectors(id);
+                            return View(sortedOrders);
+
+                        case "Sort By Date Descending":
+                            Log.Information("Sort by Date Descending Selected");
+                            sortedOrders = orders.OrderBy(ord => ord.OrderDate).ToList();
+                            SetListSelectors(id);
+                            return View(sortedOrders);
+
+                    }
+                } catch
+                {
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        private void SetListSelectors(int id)
+        {
+            int i = 0;
+            List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
+            foreach (OrderVM order in orders)
+            {
+                string customerSelector = "customer" + i;
+                Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                string customerName = customer.FirstName + " " + customer.LastName;
+                ViewData.Add(customerSelector, customerName);
+
+                string storeSelector = "location" + i;
+                Location location = _locationBL.GetLocationById(order.LocationID);
+                ViewData.Add(storeSelector, location.StoreName);
+
+                i++;
+            }
         }
     }
 }
