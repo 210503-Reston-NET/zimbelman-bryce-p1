@@ -15,12 +15,16 @@ namespace StoreWebUI.Controllers
         private ILocationBL _locationBL;
         private IInventoryBL _inventoryBL;
         private IProductBL _productBL;
+        private IOrderBL _orderBL;
+        private ICustomerBL _customerBL;
 
-        public LocationController(ILocationBL locationBL, IInventoryBL inventoryBL, IProductBL productBL)
+        public LocationController(ILocationBL locationBL, IInventoryBL inventoryBL, IProductBL productBL, IOrderBL orderBL, ICustomerBL customerBL)
         {
             _locationBL = locationBL;
             _inventoryBL = inventoryBL;
             _productBL = productBL;
+            _orderBL = orderBL;
+            _customerBL = customerBL;
         }
 
         // GET: Location
@@ -140,6 +144,34 @@ namespace StoreWebUI.Controllers
         {
             TempData["locationID"] = id;
             return RedirectToAction("Edit", "Inventory");
+        }
+
+        // Get
+        public ActionResult ViewOrders(int id)
+        {
+            try
+            {
+                int i = 0;
+                List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
+                foreach (OrderVM order in orders)
+                {
+                    string customerSelector = "customer" + i;
+                    Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                    string customerName = customer.FirstName + " " + customer.LastName;
+                    ViewData.Add(customerSelector, customerName);
+
+                    string storeSelector = "location" + i;
+                    Location location = _locationBL.GetLocationById(order.LocationID);
+                    ViewData.Add(storeSelector, location.StoreName);
+
+                    i++;
+                }
+                return View(orders);
+            } catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
         }
     }
 }

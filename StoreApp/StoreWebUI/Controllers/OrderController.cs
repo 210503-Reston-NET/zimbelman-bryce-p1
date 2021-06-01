@@ -234,7 +234,7 @@ namespace StoreWebUI.Controllers
                 return View(customerOrder);
             } catch
             {
-                return View();
+                return RedirectToAction(nameof(Search));
             }
         }
     }

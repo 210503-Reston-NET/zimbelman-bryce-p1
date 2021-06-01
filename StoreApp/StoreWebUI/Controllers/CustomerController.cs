@@ -13,10 +13,16 @@ namespace StoreWebUI.Controllers
     public class CustomerController : Controller
     {
 
-        public ICustomerBL _customerBL;
-        public CustomerController(ICustomerBL customerBL)
+        private ICustomerBL _customerBL;
+        private IOrderBL _orderBL;
+        private ILocationBL _locationBL;
+
+
+        public CustomerController(ICustomerBL customerBL, IOrderBL orderBL, ILocationBL locationBL)
         {
             _customerBL = customerBL;
+            _orderBL = orderBL;
+            _locationBL = locationBL;
         }
 
 
@@ -35,7 +41,7 @@ namespace StoreWebUI.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            
+
         }
 
         // Get
@@ -64,7 +70,7 @@ namespace StoreWebUI.Controllers
                 return View();
             }
         }
-      
+
 
         // GET: Customer/Details/5
         public ActionResult Details(int id)
@@ -163,6 +169,34 @@ namespace StoreWebUI.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        // Get
+        public ActionResult ViewOrders(int id)
+        {
+            try
+            {
+                int i = 0;
+                List<OrderVM> orders = _orderBL.GetCustomerOrders(id).Select(ord => new OrderVM(ord)).ToList();
+                foreach (OrderVM order in orders)
+                {
+                    string customerSelector = "customer" + i;
+                    Customer customer = _customerBL.SearchCustomer(order.CustomerID);
+                    string customerName = customer.FirstName + " " + customer.LastName;
+                    ViewData.Add(customerSelector, customerName);
+
+                    string storeSelector = "location" + i;
+                    Location location = _locationBL.GetLocationById(order.LocationID);
+                    ViewData.Add(storeSelector, location.StoreName);
+
+                    i++;
+                }
+                return View(orders);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(List));
             }
         }
     }

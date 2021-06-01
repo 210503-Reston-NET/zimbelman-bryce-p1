@@ -24,6 +24,7 @@ namespace StoreWebUI.Models
         /// This represents a unqie value for every order
         /// </summary>
         /// <value></value>
+        [DisplayName("Order ID")]
         public int OrderID { get; set; }
         /// <summary>
         /// This represents the customer information of an order
