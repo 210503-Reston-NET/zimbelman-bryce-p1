@@ -33,7 +33,8 @@ steps:
   inputs:
     command: 'build'
     projects: $(solution)
-- # task: DotNetCoreCLI@2
+    
+# task: DotNetCoreCLI@2
   # displayName: Test
   # inputs:
     # command: 'test'
