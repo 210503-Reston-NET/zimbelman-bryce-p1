@@ -39,6 +39,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
     projects: '**/StoreApp/StoreTests/*.csproj'
+    nobuild: true
 - task: PublishCodeCoverageResults@1
   displayName: SonarCloud Code Coverage
   inputs:
