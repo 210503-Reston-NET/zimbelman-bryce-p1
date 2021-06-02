@@ -12,19 +12,21 @@ namespace StoreWebUI.Controllers
 {
     public class OrderController : Controller
     {
-        public IOrderBL _orderBL;
-        public ICustomerBL _customerBL;
-        public ILocationBL _locationBL;
-        public IProductBL _productBL;
-        public ILineItemBL _lineItemBL;
+        private IOrderBL _orderBL;
+        private ICustomerBL _customerBL;
+        private ILocationBL _locationBL;
+        private IProductBL _productBL;
+        private ILineItemBL _lineItemBL;
+        private IInventoryBL _inventoryBL;
 
-        public OrderController(IOrderBL orderBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, ILineItemBL lineItemBL)
+        public OrderController(IOrderBL orderBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, ILineItemBL lineItemBL, IInventoryBL inventoryBL)
         {
             _orderBL = orderBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
             _productBL = productBL;
             _lineItemBL = lineItemBL;
+            _inventoryBL = inventoryBL;
         }
 
         // GET: Order
@@ -160,6 +162,7 @@ namespace StoreWebUI.Controllers
                 TempData["OrderTotal"] = orderTotal.ToString();
                 string orderId = TempData["OrderID"].ToString();
                 TempData["OrderID"] = orderId;
+                TempData["Quantity"] = quantity;
                 Log.Information("Redirected to Order Controller: OrderConfirmation");
                 return RedirectToAction(nameof(OrderConfirmation));
             } catch
@@ -211,6 +214,13 @@ namespace StoreWebUI.Controllers
                             Location location = _locationBL.GetLocationById(order.LocationID);
                             Log.Information("UI sent updated order to BL");
                             _orderBL.UpdateOrder(order, location, customer);
+                            List<LineItem> orderItems = _lineItemBL.GetLineItems(Int32.Parse(TempData["OrderID"].ToString()));
+                            List<int> quantity = new List<int>();
+                            foreach (LineItem lineItem in orderItems)
+                            {
+                                quantity.Add(lineItem.Quantity);
+                            }
+                            _inventoryBL.SubtractInventory(location.StoreName, quantity);
                             return RedirectToAction("Index", "Home");
 
                         case "Cancel Order":
