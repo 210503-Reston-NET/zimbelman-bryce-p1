@@ -233,10 +233,15 @@ namespace StoreWebUI.Controllers
                     }
                 } catch
                 {
-                    return View();
+                    Log.Information("UI attempt to retrieve order");
+                    Order cancelOrder = _orderBL.ViewOrder(Int32.Parse(TempData["OrderID"].ToString()));
+                    Log.Information("UI request order deletion to BL");
+                    _orderBL.DeleteOrder(cancelOrder);
+                    Log.Information("Redirected to Home Controller: Index");
+                    return RedirectToAction("Index", "Home");
                 }
             }
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         // Get
