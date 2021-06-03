@@ -10,7 +10,7 @@ namespace StoreWebUI.Controllers
 {
     public class ProductController : Controller
     {
-        public IProductBL _productBL;
+        private readonly IProductBL _productBL;
         public ProductController(IProductBL productBL)
         {
             _productBL = productBL;

@@ -13,7 +13,7 @@ namespace StoreBL
         /// Business logic class for the order model
         /// </summary>
         
-        private IRepository _repo;
+        private readonly IRepository _repo;
         public OrderBL(IRepository repo) {
             _repo = repo;
         }

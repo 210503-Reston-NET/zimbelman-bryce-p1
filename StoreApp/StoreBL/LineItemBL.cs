@@ -13,7 +13,7 @@ namespace StoreBL
     public class LineItemBL : ILineItemBL
     {
 
-        private IRepository _repo;
+        private readonly IRepository _repo;
         public LineItemBL(IRepository repo) {
             _repo = repo;
         }

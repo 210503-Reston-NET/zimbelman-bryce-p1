@@ -13,9 +13,9 @@ namespace StoreWebUI.Controllers
     public class CustomerController : Controller
     {
 
-        private ICustomerBL _customerBL;
-        private IOrderBL _orderBL;
-        private ILocationBL _locationBL;
+        private readonly ICustomerBL _customerBL;
+        private readonly IOrderBL _orderBL;
+        private readonly ILocationBL _locationBL;
 
 
         public CustomerController(ICustomerBL customerBL, IOrderBL orderBL, ILocationBL locationBL)

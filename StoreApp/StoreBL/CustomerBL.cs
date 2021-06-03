@@ -10,7 +10,7 @@ namespace StoreBL
     /// </summary>
     public class CustomerBL : ICustomerBL
     {
-        private IRepository _repo;
+        private readonly IRepository _repo;
         public CustomerBL(IRepository repo) {
             _repo = repo;
         }

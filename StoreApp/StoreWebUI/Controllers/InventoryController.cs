@@ -12,9 +12,9 @@ namespace StoreWebUI.Controllers
 {
     public class InventoryController : Controller
     {
-        public IInventoryBL _inventoryBL;
-        public IProductBL _productBL;
-        public ILocationBL _locationBL;
+        private readonly IInventoryBL _inventoryBL;
+        private readonly IProductBL _productBL;
+        private readonly ILocationBL _locationBL;
         public InventoryController(IInventoryBL inventoryBL, ILocationBL locationBL, IProductBL productBL)
         {
             _inventoryBL = inventoryBL;

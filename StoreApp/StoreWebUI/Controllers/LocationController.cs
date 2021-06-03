@@ -13,11 +13,11 @@ namespace StoreWebUI.Controllers
 {
     public class LocationController : Controller
     {
-        private ILocationBL _locationBL;
-        private IInventoryBL _inventoryBL;
-        private IProductBL _productBL;
-        private IOrderBL _orderBL;
-        private ICustomerBL _customerBL;
+        private readonly ILocationBL _locationBL;
+        private readonly IInventoryBL _inventoryBL;
+        private readonly IProductBL _productBL;
+        private readonly IOrderBL _orderBL;
+        private readonly ICustomerBL _customerBL;
 
         public LocationController(ILocationBL locationBL, IInventoryBL inventoryBL, IProductBL productBL, IOrderBL orderBL, ICustomerBL customerBL)
         {

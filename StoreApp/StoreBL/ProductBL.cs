@@ -11,7 +11,7 @@ namespace StoreBL
     /// </summary>
     public class ProductBL : IProductBL
     {
-        private IRepository _repo;
+        private readonly IRepository _repo;
         public ProductBL(IRepository repo) {
             _repo = repo;
         }

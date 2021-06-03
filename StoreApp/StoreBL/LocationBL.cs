@@ -14,7 +14,7 @@ namespace StoreBL
     public class LocationBL : ILocationBL
     {
 
-        private IRepository _repo;
+        private readonly IRepository _repo;
         public LocationBL(IRepository repo) {
             _repo = repo;
         }
