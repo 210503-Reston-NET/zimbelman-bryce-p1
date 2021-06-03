@@ -51,7 +51,7 @@ namespace StoreBL
             return _repo.GetAllProducts();
         }
 
-        public Product GetProductById(int productId)
+        public Product GetProductById(int id)
         {
             List<Product> products = GetAllProducts();
             if (products.Count == 0)
@@ -63,7 +63,7 @@ namespace StoreBL
             {
                 foreach (Product item in products)
                 {
-                    if (productId.Equals(item.ProductID))
+                    if (id.Equals(item.ProductID))
                     {
                         Log.Information("BL sent Product to UI");
                         return item;

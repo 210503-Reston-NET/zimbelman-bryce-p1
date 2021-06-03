@@ -184,7 +184,7 @@ namespace StoreWebUI.Controllers
             {
                 try
                 {
-                    List<OrderVM> sortedOrders = new List<OrderVM>();
+                    List<OrderVM> sortedOrders;
                     Log.Information("UI attempt to retrieve list of location orders");
                     List<OrderVM> orders = _orderBL.GetLocationOrders(id).Select(ord => new OrderVM(ord)).ToList();
                     switch (sort)

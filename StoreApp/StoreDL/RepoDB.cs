@@ -7,7 +7,7 @@ namespace StoreDL
 {
     public class RepoDB : IRepository
     {
-        private MochaMomentDBContext _context;
+        private readonly MochaMomentDBContext _context;
         public RepoDB(MochaMomentDBContext context) {
             _context = context;
         }
@@ -206,6 +206,11 @@ namespace StoreDL
             return new Inventory(found.InventoryID, inventory.LocationID, inventory.ProductID, found.Quantity);
         }
 
+        public Inventory GetStoreInventory(int inventoryId)
+        {
+            return _context.Inventories.Find(inventoryId);
+        }
+
         public Inventory AddInventory(Inventory inventory, Location location, Product product)
         {
             _context.Inventories.Add(
@@ -316,11 +321,6 @@ namespace StoreDL
             _context.SaveChanges();
             Log.Information("DL deleted product from DB");
             return product;
-        }
-
-        public Inventory GetStoreInventory(int inventoryId)
-        {
-            return _context.Inventories.Find(inventoryId);
         }
     }
 }

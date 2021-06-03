@@ -52,7 +52,7 @@ namespace StoreBL
                 throw new Exception ("No matching locations found"); 
             }
         }
-        public Location GetLocation(string name)
+        public Location GetLocation(string locationName)
         {
             List<Location> locations = GetAllLocations();
             if (locations.Count == 0) {
@@ -60,7 +60,7 @@ namespace StoreBL
                 throw new Exception ("No Locations Found");
             } else {
                 foreach (Location location in locations) {
-                    if (name.Equals(location.StoreName)) {
+                    if (locationName.Equals(location.StoreName)) {
                         Log.Information("BL sent location to UI");
                         return location;
                     }

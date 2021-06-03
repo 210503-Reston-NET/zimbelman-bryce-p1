@@ -12,9 +12,9 @@ namespace StoreBL
     /// </summary>
     public class InventoryBL : IInventoryBL
     {
-        private IRepository _repo;
-        private ILocationBL _locationBL;
-        private IProductBL _productBL;
+        private readonly IRepository _repo;
+        private readonly ILocationBL _locationBL;
+        private readonly IProductBL _productBL;
         public InventoryBL(IRepository repo, ILocationBL locationBL, IProductBL productBL) {
             _repo = repo;
             _locationBL = locationBL;
@@ -121,7 +121,7 @@ namespace StoreBL
                 return updatedInventory;
             }
 
-        public List<int> SubtractInventory(string nameOfStore, List<int> productQuantity)
+        public List<int> SubtractInventory(string nameOfStore, List<int> quantity)
         {
             int i = 0;
             List<Inventory> inventories = _repo.GetAllInventories();
@@ -135,10 +135,10 @@ namespace StoreBL
                 foreach (Inventory inventory in inventories) {
                     if (inventory.LocationID.Equals(location.LocationID) && inventory.ProductID.Equals(item.ProductID)) {
                         // If not enough inventory exists for purchase, throw exception
-                        if (inventory.Quantity-productQuantity[i] < 0) {
+                        if (inventory.Quantity-quantity[i] < 0) {
                             throw new Inventory.NotEnoughInventoryException("Not enough item in inventory");
                         }
-                        inventory.Quantity -= productQuantity[i];
+                        inventory.Quantity -= quantity[i];
                         updatedInventory.Add(inventory.Quantity);
                         i++;
                         Log.Information("BL sent updated inventory to DL");
