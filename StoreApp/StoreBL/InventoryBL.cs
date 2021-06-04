@@ -135,7 +135,7 @@ namespace StoreBL
                 foreach (Inventory inventory in inventories) {
                     if (inventory.LocationID.Equals(location.LocationID) && inventory.ProductID.Equals(item.ProductID)) {
                         // If not enough inventory exists for purchase, throw exception
-                        if (inventory.Quantity-quantity[i] < 0) {
+                        if (inventory.Quantity - quantity[i] < 0) {
                             throw new Inventory.NotEnoughInventoryException("Not enough item in inventory");
                         }
                         inventory.Quantity -= quantity[i];
